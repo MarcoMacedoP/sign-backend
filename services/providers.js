@@ -10,3 +10,4 @@ class ProvidersServices {
     return providers;
   }
 }
+module.exports = ProvidersServices;
