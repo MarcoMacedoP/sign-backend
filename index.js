@@ -7,8 +7,8 @@ const { port } = require("./config/");
 const app = express();
 
 //Server init
-const server = app.listen(port, () => {
-  console.log(`server startded at port: ${server.address().port}`);
+app.listen(port, () => {
+  console.log("server startded at port", port);
 });
 
 //Routes---------------------------------------
@@ -22,7 +22,6 @@ app.use(bodyParser.json());
 //--------------------------------------------
 
 //Route Middlewares
-
 app.get("/", (req, res) => {
-  req.send("Home is where the haunt is...");
+  res.status(200).send("Home is where the haunt is...");
 });
