@@ -19,7 +19,9 @@ CREATE TABLE IF NOT EXISTS services(
     description TEXT,
     cost FLOAT NOT NULL,
     cost_per_hour FLOAT DEFAULT cost,
-    provider_id INTEGER NOT NULL
+    provider_id INTEGER NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
 )CHARACTER SET utf8 COLLATE utf8_spanish_ci;
 
 CREATE TABLE IF NOT EXISTS products(
@@ -27,6 +29,20 @@ CREATE TABLE IF NOT EXISTS products(
     name VARCHAR (50) NOT NULL,
     description TEXT,
     cost FLOAT NOT NULL,
-    provider_id INTEGER NOT NULL
+    provider_id INTEGER NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
 )CHARACTER SET utf8 COLLATE utf8_spanish_ci;
 
+CREATE TABLE IF NOT EXISTS users(
+    user_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR (255) NOT NULL UNIQUE,
+    name VARCHAR(50) NOT NULL,
+    lastname VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    profile_pic_url VARCHAR(255),
+    biography TEXT,
+    location VARCHAR(255),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
+)CHARACTER SET utf8 COLLATE utf8_spanish_ci;

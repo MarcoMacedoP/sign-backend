@@ -12,7 +12,9 @@ app.listen(port, () => {
 });
 
 //Routes---------------------------------------
-const providersApiRoute = require("./routes/api/Providers");
+const authApiRoute = require("./api/auth");
+const providersApiRoute = require("./api/Providers");
+const usersApiRoute = require("./api/users");
 //---------------------------------------------
 
 //Middlewares---------------------------------
@@ -23,7 +25,9 @@ app.use(bodyParser.json());
 //--------------------------------------------
 
 //Route Middlewares
+app.use("/api/auth", authApiRoute);
 app.use("/api/providers", providersApiRoute);
+app.use("/api/users", usersApiRoute);
 //Views
 app.get("/", (req, res) => {
   res.status(200).send("Home is where the haunt is...");

@@ -9,5 +9,10 @@ class ProvidersServices {
     const providers = await this.mariadb.getAll(this.table);
     return providers;
   }
+  async getOne({ providerId }) {
+    const query = `provider_id = ${providerId}`; // WHERE query;
+    const provider = await this.mariadb.getOne(this.table, query);
+    return provider;
+  }
 }
 module.exports = ProvidersServices;
