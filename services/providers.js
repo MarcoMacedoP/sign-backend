@@ -6,7 +6,7 @@ class ProvidersServices {
     this.mariadb = new MariaLib();
   }
   async getAll() {
-    const providers = await this.mariadb.getAll(this.table);
+    const providers = await this.mariadb.read(this.table);
     return providers;
   }
   async getOne({ providerId }) {

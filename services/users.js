@@ -28,7 +28,7 @@ class UsersServices {
   async getByEmail({ email }) {
     const [ user ] = await this.mariadb.read(
       "users",
-      `email = '${email}'
+      `WHERE email = '${email}'
       `
     );
     return user;

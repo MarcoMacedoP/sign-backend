@@ -8,7 +8,7 @@ passport.use(
     const mariadb = new MariaLib();
     const [ user ] = await mariadb.read(
       "users",
-      `email = '${email}'`
+      `WHERE email = '${email}'`
     );
     if (!user) {
       //bad user
