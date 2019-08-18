@@ -13,7 +13,7 @@ app.listen(port, () => {
 
 //Routes---------------------------------------
 const authApiRoute = require("./api/auth");
-const providersApiRoute = require("./api/Providers");
+const providersApiRoute = require("./api/providers");
 const usersApiRoute = require("./api/users");
 //---------------------------------------------
 

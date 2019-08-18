@@ -5,9 +5,10 @@ CREATE TABLE IF NOT EXISTS providers(
     `name` VARCHAR(35) NOT NULL,
     lastname  VARCHAR(35) NOT NULL,
     email VARCHAR(100),
-    phone INTEGER UNSIGNED,
+    phone INT UNSIGNED,
     image_url VARCHAR(255),
     about TEXT,
+    user_id INTEGER UNSIGNED NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
         ON UPDATE CURRENT_TIMESTAMP
@@ -42,7 +43,7 @@ CREATE TABLE IF NOT EXISTS users(
     password VARCHAR(255) NOT NULL,
     profile_pic_url VARCHAR(255),
     biography TEXT,
-    location VARCHAR(255),
+    job_title VARCHAR(255),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
 )CHARACTER SET utf8 COLLATE utf8_spanish_ci;

@@ -1,19 +1,9 @@
 //Dependencies and resources
 const express = require("express");
 const router = express.Router();
+const debug = require("debug")("app:api:users");
 //Services
 const UserServices = require("../services/users");
-
-router.post("/signup", async (req, res, next) => {
-  try {
-    const userServices = new UserServices();
-    console.log(req.body);
-    const result = await userServices.signUp(req.body);
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
-  }
-});
 
 //Single user requests
 router.get("/:userId", async (req, res, next) => {

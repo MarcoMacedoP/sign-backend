@@ -5,8 +5,11 @@ class ProvidersServices {
     this.table = "providers";
     this.mariadb = new MariaLib();
   }
-  async getAll() {
-    const providers = await this.mariadb.read(this.table);
+  async getAll({ userId }) {
+    const providers = await this.mariadb.read(
+      this.table,
+      `WHERE user_id = ${userId}`
+    );
     return providers;
   }
   async getOne({ providerId }) {
