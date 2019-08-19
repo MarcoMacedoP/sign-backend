@@ -9,7 +9,6 @@
     "dev": "nodemon index.js",
     "dev:debug": "set DEBUG=express:*, app:* & nodemon index.js"
   },
-
   "author": "Marco Macedo",
   "license": "ISC",
   "dependencies": {
