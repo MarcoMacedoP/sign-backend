@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
     "dev": "nodemon index.js",
     "dev:debug": "set DEBUG=express:*, app:* & nodemon index.js"
   },
+
   "author": "Marco Macedo",
   "license": "ISC",
   "dependencies": {
