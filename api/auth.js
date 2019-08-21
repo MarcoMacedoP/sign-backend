@@ -9,6 +9,7 @@ const UserServices = require("../services/users");
 //basic strategy
 require("../utils/auth/strategies/basic");
 router.post("/token", async (req, res, next) => {
+  //cambiar a log in
   ///Login and obtain token
   authenticateUser(req, res, next);
 });

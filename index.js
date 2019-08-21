@@ -1,6 +1,7 @@
 //Modules
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 //Config
 const { port } = require("./config/");
@@ -22,6 +23,8 @@ const usersApiRoute = require("./api/users");
 app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
+// cors
+app.use(cors());
 //--------------------------------------------
 
 //Route Middlewares
