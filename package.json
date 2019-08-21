@@ -6,22 +6,27 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
+    "start:background": "pm2 start index.js -i -1",
+    "audit:background": "pm2 monit",
+    "stop:background": "pm2 delete index.js",
     "dev": "nodemon index.js",
     "dev:debug": "set DEBUG=express:*, app:* & nodemon index.js"
   },
   "author": "Marco Macedo",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "debug": "^4.1.1",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mariadb": "^2.1.0",
-    "nodemon": "^1.19.1",
     "passport": "^0.4.0",
     "passport-http": "^0.3.0",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "pm2": "^3.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
   }
 }
