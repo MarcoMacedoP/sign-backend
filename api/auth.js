@@ -1,14 +1,14 @@
 const express = require("express");
+const router = express.Router();
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
-const router = express.Router();
 const config = require("../config/");
 const debug = require("debug")("app:api:auth");
 //Services
 const UserServices = require("../services/users");
 //basic strategy
 require("../utils/auth/strategies/basic");
-router.post("/token", async (req, res, next) => {
+router.post("/login", async (req, res, next) => {
   //cambiar a log in
   ///Login and obtain token
   authenticateUser(req, res, next);
@@ -17,15 +17,16 @@ router.post("/token", async (req, res, next) => {
 router.post("/signup", async (req, res, next) => {
   //Signup and obtain token
   try {
-    const userServices = new UserServices();
-    const { email, password } = await userServices.signUp(req.body);
-    debug(`${email}, ${password}`);
-    // Add result to basic auth header and authtenticate
-    const authHeader = `${email}:${password}`;
-    const buffer = Buffer.from(authHeader);
-    const authHeaderBase64 = buffer.toString("base64");
-    req.headers.authorization = `Basic ${authHeaderBase64}==`;
-    authenticateUser(req, res, next);
+    debug(req.body);
+    res.status(200).json({ message: "helo there" });
+    // const userServices = new UserServices();
+    // const { email, password } = await userServices.signUp(req.body);
+    // // Add result to basic auth header and authtenticate
+    // const authHeader = `${email}:${password}`;
+    // const buffer = Buffer.from(authHeader);
+    // const authHeaderBase64 = buffer.toString("base64");
+    // req.headers.authorization = `Basic ${authHeaderBase64}==`;
+    // authenticateUser(req, res, next);
   } catch (error) {
     next(error);
   }

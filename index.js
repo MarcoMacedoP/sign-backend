@@ -16,6 +16,7 @@ app.listen(port, () => {
 const authApiRoute = require("./api/auth");
 const providersApiRoute = require("./api/providers");
 const usersApiRoute = require("./api/users");
+const testRoute = require("./api/test");
 //---------------------------------------------
 
 //Middlewares---------------------------------
@@ -24,14 +25,29 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
 // cors
-app.use(cors());
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, authorization"
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "PUT, GET, POST, DELETE, OPTIONS"
+  );
+  next();
+});
+
 //--------------------------------------------
 
 //Route Middlewares
 app.use("/api/auth", authApiRoute);
 app.use("/api/providers", providersApiRoute);
 app.use("/api/users", usersApiRoute);
+app.use("/api/test", testRoute);
 //Views
 app.get("/", (req, res) => {
-  res.status(200).send("Home is where the haunt is...");
+  res.status(200).json({ message: "Home is where the haunt is..." });
 });
