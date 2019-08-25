@@ -15,7 +15,7 @@ app.listen(port, () => {
 
 //Routes---------------------------------------
 const authApiRoute = require("./api/auth");
-const providersApiRoute = require("./api/providers");
+const providersApiRoute = require("./api/providers/providers");
 const usersApiRoute = require("./api/users");
 const testRoute = require("./api/test");
 //---------------------------------------------

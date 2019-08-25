@@ -4,11 +4,11 @@ const router = express.Router();
 const debug = require("debug")("app:api:providers");
 
 //Services
-const ProvidersServices = require("../services/providers");
+const ProvidersServices = require("../../services/providers");
 //JWT strategy
 
 //Extract JWT
-const { extractJwt } = require("../utils/extractJwt");
+const { extractJwt } = require("../../utils/extractJwt");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -47,5 +47,16 @@ router.patch("/:providerId", async (req, res, next) => {
     next(error);
   }
 });
-
+router.delete("/:providerId", async (req, res, next) => {
+  try {
+    const { providerId } = req.params;
+    const providersServices = new ProvidersServices();
+    const result = await providersServices.remove({
+      providerId
+    });
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = router;

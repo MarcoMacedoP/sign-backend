@@ -35,5 +35,21 @@ class ProvidersServices {
       throw new Error("No se actualizo el provedor. 🤷‍♀️");
     }
   }
+
+  async remove({ providerId }) {
+    const setNewData = `active = 0`;
+    const condition = `provider_id = ${providerId}`;
+
+    const result = await this.mariadb.update(
+      this.table,
+      setNewData,
+      condition
+    );
+    if (result.affectedRows != 0) {
+      return { status: true, removedId: providerId };
+    } else {
+      throw new Error("No se actualizo el provedor. 🤷‍♀️");
+    }
+  }
 }
 module.exports = ProvidersServices;
