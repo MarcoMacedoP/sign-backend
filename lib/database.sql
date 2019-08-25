@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS services(
     description TEXT,
     cost FLOAT NOT NULL,
     cost_per_hour FLOAT DEFAULT cost,
+    active BOOL NOT NULL DEFAULT TRUE,
     provider_id INTEGER NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 

@@ -15,8 +15,9 @@ app.listen(port, () => {
 
 //Routes---------------------------------------
 const authApiRoute = require("./api/auth");
-const providersApiRoute = require("./api/providers/providers");
 const usersApiRoute = require("./api/users");
+const providersApiRoute = require("./api/providers/providers");
+const providersServicesApiRoute = require("./api/providers/services");
 const testRoute = require("./api/test");
 //---------------------------------------------
 
@@ -53,6 +54,11 @@ app.use(
   "/api/providers",
   passport.authenticate("jwt", { session: false }),
   providersApiRoute
+);
+app.use(
+  "/api/services",
+  passport.authenticate("jwt", { session: false }),
+  providersServicesApiRoute
 );
 app.use("/api/users", usersApiRoute);
 app.use("/api/test", testRoute);

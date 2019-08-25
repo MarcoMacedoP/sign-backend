@@ -1,4 +1,4 @@
-const MariaLib = require("../lib/mariadb");
+const MariaLib = require("../../lib/mariadb");
 const debug = require("debug")("app:services:providers");
 class ProvidersServices {
   constructor() {
@@ -13,8 +13,8 @@ class ProvidersServices {
     return providers;
   }
   async getOne({ providerId }) {
-    const query = `provider_id = ${providerId}`; // WHERE query;
-    const provider = await this.mariadb.getOne(this.table, query);
+    const query = `WHERE provider_id = ${providerId}`; // WHERE query;
+    const provider = await this.mariadb.read(this.table, query);
     return provider;
   }
   async update({ providerId, data }) {

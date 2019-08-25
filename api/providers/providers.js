@@ -4,7 +4,7 @@ const router = express.Router();
 const debug = require("debug")("app:api:providers");
 
 //Services
-const ProvidersServices = require("../../services/providers");
+const ProvidersServices = require("../../services/providers/providers");
 //JWT strategy
 
 //Extract JWT
@@ -13,7 +13,6 @@ const { extractJwt } = require("../../utils/extractJwt");
 router.get("/", async (req, res, next) => {
   try {
     const { sub: userId } = extractJwt(req); //Extract sub from JWT and store it as userId
-    console.log(userId);
     const providersServices = new ProvidersServices();
     const providers = await providersServices.getAll({ userId });
     res.status(200).json(providers);
