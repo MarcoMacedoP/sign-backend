@@ -11,6 +11,7 @@ require("../utils/auth/strategies/basic");
 router.post("/login", async (req, res, next) => {
   //cambiar a log in
   ///Login and obtain token
+  debug(req.headers.authorization);
   authenticateUser(req, res, next);
 });
 
@@ -18,15 +19,14 @@ router.post("/signup", async (req, res, next) => {
   //Signup and obtain token
   try {
     debug(req.body);
-    res.status(200).json({ message: "helo there" });
-    // const userServices = new UserServices();
-    // const { email, password } = await userServices.signUp(req.body);
-    // // Add result to basic auth header and authtenticate
-    // const authHeader = `${email}:${password}`;
-    // const buffer = Buffer.from(authHeader);
-    // const authHeaderBase64 = buffer.toString("base64");
-    // req.headers.authorization = `Basic ${authHeaderBase64}==`;
-    // authenticateUser(req, res, next);
+    const userServices = new UserServices();
+    const { email, password } = await userServices.signUp(req.body);
+    // Add result to basic auth header and authtenticate
+    const authHeader = `${email}:${password}`;
+    const buffer = Buffer.from(authHeader);
+    const authHeaderBase64 = buffer.toString("base64");
+    req.headers.authorization = `Basic ${authHeaderBase64}==`;
+    authenticateUser(req, res, next);
   } catch (error) {
     next(error);
   }
@@ -51,7 +51,7 @@ function authenticateUser(req, res, next) {
             const token = jwt.sign(payload, config.authJwtSecret, {
               expiresIn : "15m"
             });
-            res.status(200).json({ accestoken: token });
+            res.status(200).json({ accesToken: token });
           }
         });
       }

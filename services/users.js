@@ -13,15 +13,14 @@ class UsersServices {
       "(email, name, lastname, password)",
       [ email, name, lastname, password ]
     );
-    debug(insertId);
-    //SELECT email, password  FROM users WHERE email = ?
+
     if (insertId) {
       const user = await this.mariadb.read(
+        //SELECT email, password  FROM users WHERE email = ?
         this.table,
         `WHERE user_id = '${insertId}'`,
         "email, password"
       );
-      debug(user);
       return user[0];
     } else {
       throw new Error("Error on services");

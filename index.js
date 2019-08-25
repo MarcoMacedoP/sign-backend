@@ -2,6 +2,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const passport = require("passport");
 
 //Config
 const { port } = require("./config/");
@@ -42,9 +43,17 @@ app.use(function(req, res, next) {
 
 //--------------------------------------------
 
+//JWT strategy
+require("./utils/auth/strategies/jwt");
+
 //Route Middlewares
 app.use("/api/auth", authApiRoute);
-app.use("/api/providers", providersApiRoute);
+
+app.use(
+  "/api/providers",
+  passport.authenticate("jwt", { session: false }),
+  providersApiRoute
+);
 app.use("/api/users", usersApiRoute);
 app.use("/api/test", testRoute);
 //Views
