@@ -1,5 +1,5 @@
 const MariaLib = require("../../lib/mariadb");
-
+const debug = require("debug")("app:services:services");
 class ProvidersServicesServices {
   constructor() {
     this.table = "services";
@@ -18,8 +18,12 @@ class ProvidersServicesServices {
     return service;
   }
 
-  async create({ userId, name, description, cost, costPerHour }) {
-    const result = await this.mariadb.create(this.table);
+  async create({ providerId, name, description, cost, costPerHour }) {
+    const rows = "(name, description, cost, provider_id)";
+    const values = [ name, description, cost, providerId ];
+    const { insertId } = await this.mariadb.create(this.table, rows, values);
+    debug(insertId);
+    return { insertId };
   }
 
   async update({ serviceId, data }) {
@@ -28,14 +32,11 @@ class ProvidersServicesServices {
     const setNewData = `name="${name}", description="${description}", cost_per_hour="${costPerHour}", cost="${cost}"`;
     const condition = `service_id = ${serviceId}`;
 
-    const result = await this.mariadb.update(
-      this.table,
-      setNewData,
-      condition
-    );
+    const result = await this.mariadb.update(this.table, setNewData, condition);
     if (result.affectedRows != 0) {
       return { status: true, updatedId: providerId };
-    } else {
+    }
+    else {
       throw new Error("No se actualizo el servicio. 🤷‍♀️");
     }
   }
@@ -44,14 +45,11 @@ class ProvidersServicesServices {
     const setNewData = `active = 0`;
     const condition = `service_id = ${serviceId}`;
 
-    const result = await this.mariadb.update(
-      this.table,
-      setNewData,
-      condition
-    );
+    const result = await this.mariadb.update(this.table, setNewData, condition);
     if (result.affectedRows != 0) {
       return { status: true, removedId: serviceId };
-    } else {
+    }
+    else {
       throw new Error("No se pudo eliminar el servicio. 🤷‍♀️");
     }
   }

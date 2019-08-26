@@ -18,9 +18,18 @@ router.get("/", async (req, res, next) => {
   });
   res.status(200).json(services);
 });
-router.post("/", (req, res, next) => {
+router.post("/", async (req, res, next) => {
   //Add service
-  const { name, description, cost, costPerHour } = req.body;
+  const { name, description, cost, costPerHour, providerId} = req.body; // prettier-ignore
+  const providersServicesServices = new ProvidersServicesServices();
+  try {
+    const {insertId : addedServiceId} = await providersServicesServices.create({
+                 name, description, cost, costPerHour, providerId}); // prettier-ignore
+
+    res.status(200).json({ addedServiceId, message: "Service created" });
+  } catch (error) {
+    next(error);
+  }
 });
 router.get("/:serviceId", (req, res, next) => {
   //get service
