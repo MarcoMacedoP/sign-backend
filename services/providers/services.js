@@ -34,7 +34,7 @@ class ProvidersServicesServices {
 
     const result = await this.mariadb.update(this.table, setNewData, condition);
     if (result.affectedRows != 0) {
-      return { status: true, updatedId: providerId };
+      return { status: true, updatedServiceId: serviceId };
     }
     else {
       throw new Error("No se actualizo el servicio. 🤷‍♀️");
