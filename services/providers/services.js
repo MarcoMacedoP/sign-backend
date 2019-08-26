@@ -13,8 +13,8 @@ class ProvidersServicesServices {
     return services;
   }
   async getOne({ serviceId }) {
-    const query = `service_id = ${serviceId}`; // WHERE query;
-    const service = await this.mariadb.getOne(this.table, query);
+    const query = `WHERE service_id = ${serviceId}`; // WHERE query;
+    const service = await this.mariadb.read(this.table, query);
     return service;
   }
 

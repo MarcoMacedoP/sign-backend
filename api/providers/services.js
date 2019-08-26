@@ -31,8 +31,18 @@ router.post("/", async (req, res, next) => {
     next(error);
   }
 });
-router.get("/:serviceId", (req, res, next) => {
-  //get service
+router.get("/:serviceId", async (req, res, next) => {
+  //get one service by it's id
+  const { serviceId } = req.params;
+  const providersServicesServices = new ProvidersServicesServices();
+  try {
+    const updatedService = await providersServicesServices.getOne({
+      serviceId
+    });
+    res.status(200).json(updatedService);
+  } catch (error) {
+    next(error);
+  }
 });
 router.patch("/:serviceId", (req, res, next) => {
   //update service
