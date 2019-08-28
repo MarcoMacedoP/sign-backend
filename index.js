@@ -19,7 +19,7 @@ const usersApiRoute = require("./api/users");
 const providersApiRoute = require("./api/providers/providers");
 const providersServicesApiRoute = require("./api/providers/services");
 const providersProductsApiRoute = require("./api/providers/products");
-
+const clientsApiRoute = require("./api/clients");
 const testRoute = require("./api/test");
 //---------------------------------------------
 
@@ -66,6 +66,12 @@ app.use(
 );
 app.use("/api/users", usersApiRoute);
 app.use("/api/test", testRoute);
+
+app.use(
+  "/api/clients",
+  passport.authenticate("jwt", { session: false }),
+  clientsApiRoute
+);
 
 //Error handlers----------
 const {
