@@ -62,3 +62,34 @@ CREATE TABLE IF NOT EXISTS clients(
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
 )CHARACTER SET utf8 COLLATE utf8_spanish_ci;
+
+CREATE TABLE IF NOT EXISTS reminders(
+    reminder_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(50),
+    `description` VARCHAR(255),
+    date TIMESTAMP NOT NULL, 
+    active TINYINT(1) DEFAULT 1,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
+)CHARACTER SET utf8 COLLATE utf8_spanish_ci;
+
+CREATE TABLE IF NOT EXISTS reminders_clients(
+    reminder_client_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    client_id INTEGER NOT NULL,
+    reminder_id INTEGER NOT NULL
+)CHARACTER SET utf8 COLLATE utf8_spanish_ci;
+
+CREATE TABLE IF NOT EXISTS reminders_clients(
+    reminder_client_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    client_id INTEGER NOT NULL,
+    reminder_id INTEGER NOT NULL
+)CHARACTER SET utf8 COLLATE utf8_spanish_ci;
+
+CREATE TABLE IF NOT EXISTS reminders_providers(
+    reminder_provider_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    provider_id INTEGER NOT NULL,
+    reminder_id INTEGER NOT NULL
+)CHARACTER SET utf8 COLLATE utf8_spanish_ci;
+
+
+INSERT INTO reminders (title, description, date) VALUES ("TITULO", "DESCRIPCION", '1970-01-02');

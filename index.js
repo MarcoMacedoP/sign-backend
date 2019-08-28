@@ -20,6 +20,7 @@ const providersApiRoute = require("./api/providers/providers");
 const providersServicesApiRoute = require("./api/providers/services");
 const providersProductsApiRoute = require("./api/providers/products");
 const clientsApiRoute = require("./api/clients");
+const remindersApiRoute = require("./api/reminders/reminders");
 const testRoute = require("./api/test");
 //---------------------------------------------
 
@@ -72,6 +73,7 @@ app.use(
   passport.authenticate("jwt", { session: false }),
   clientsApiRoute
 );
+app.use("/api/reminders", remindersApiRoute);
 
 //Error handlers----------
 const {
