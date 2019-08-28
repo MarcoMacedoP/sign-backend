@@ -8,6 +8,7 @@ const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
 const MariaLib = require("../../../lib/mariadb");
 const config = require("../../../config/");
+const boom = require("@hapi/boom");
 
 passport.use(
   new Strategy(
@@ -25,12 +26,12 @@ passport.use(
         );
 
         if (!user) {
-          return done(new Error("Bad user"), false);
+          boom.unauthorized();
         }
 
         return done(null, user);
       } catch (error) {
-        return done(error);
+        done(boom.unauthorized());
       }
     }
   )

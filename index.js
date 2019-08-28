@@ -18,6 +18,8 @@ const authApiRoute = require("./api/auth");
 const usersApiRoute = require("./api/users");
 const providersApiRoute = require("./api/providers/providers");
 const providersServicesApiRoute = require("./api/providers/services");
+const providersProductsApiRoute = require("./api/providers/products");
+
 const testRoute = require("./api/test");
 //---------------------------------------------
 
@@ -35,10 +37,7 @@ app.use(function(req, res, next) {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, authorization"
   );
-  res.header(
-    "Access-Control-Allow-Methods",
-    "PUT, GET, POST, DELETE, OPTIONS"
-  );
+  res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
   next();
 });
 
@@ -60,8 +59,28 @@ app.use(
   passport.authenticate("jwt", { session: false }),
   providersServicesApiRoute
 );
+app.use(
+  "/api/products",
+  passport.authenticate("jwt", { session: false }),
+  providersProductsApiRoute
+);
 app.use("/api/users", usersApiRoute);
 app.use("/api/test", testRoute);
+
+//Error handlers----------
+const {
+  logErrors,
+  wrapErrors,
+  clientErrorHandler,
+  errorHandler
+} = require("./utils/middlewares/errorHandlers");
+
+//Middlewares
+app.use(logErrors);
+app.use(wrapErrors);
+app.use(clientErrorHandler);
+app.use(errorHandler);
+
 //Views
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Home is where the haunt is..." });

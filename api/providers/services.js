@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const debug = require("debug")("app:api:services");
 //services
-const ProvidersServicesServices = require("../../services/providers/services");
+const ProvidersServicesServices = require("../../services/providers/servicesOrProducts");
 //functions
 const { extractJwt } = require("../../utils/extractJwt");
 
@@ -13,10 +13,14 @@ router.get("/", async (req, res, next) => {
   const { providerId } = req.body;
   debug(req.body);
   const providersServicesServices = new ProvidersServicesServices();
-  const services = await providersServicesServices.getAll({
-    providerId
-  });
-  res.status(200).json(services);
+  try {
+    const services = await providersServicesServices.getAll({
+      providerId
+    });
+    res.status(200).json(services);
+  } catch (error) {
+    next(erorr);
+  }
 });
 router.post("/", async (req, res, next) => {
   //Add service
