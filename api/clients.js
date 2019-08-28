@@ -10,6 +10,12 @@ const debug = require("debug")("app:clientsApi");
 //Resources
 const { extractJwt } = require("../utils/extractJwt");
 const ClientsServices = require("../services/clients");
+//Validation stuff
+const validate = require("../utils/middlewares/validationHandler");
+const {
+  createClientSchema,
+  clientIdSchema
+} = require("../utils/schemas/clients");
 
 //**********Routes************
 
@@ -40,10 +46,11 @@ router.get("/:clientId", async (req, res, next) => {
   }
 });
 //Create one client
-router.post("/", async (req, res, next) => {
+router.post("/", validate(createClientSchema), async (req, res, next) => {
   const { sub: userId } = extractJwt(req);
   const clientsServices = new ClientsServices();
   const { name, lastname, email, phone } = req.body;
+
   try {
     const result = await clientsServices.createOne({
       userId,

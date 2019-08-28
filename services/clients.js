@@ -12,8 +12,18 @@ class ClientsServices extends MariaLib {
     return this.read(this.table, `WHERE client_id = ${clientId}`);
   }
   createOne({ userId, name, lastname, email, phone }) {
-    const rows = "(name, lastname, email, phone, user_id)";
-    const values = [ name, lastname, email, phone, userId ];
+    let rows = "(name, lastname, email, phone, user_id)";
+    let values = [ name, lastname, email, phone, userId ];
+
+    //Data validation
+    if (!email || !phone) {
+      rows = `(name, lastname ${email ? ", email" : ""} ${phone ? ", phone" : ""}, user_id )`; // prettier-ignore
+
+      if (!phone) values = [ name, lastname, email, userId ];
+
+      if (!email) values = [ name, lastname, email, userId ];
+    }
+
     return this.create(this.table, rows, values);
   }
   remove({ clientId }) {
