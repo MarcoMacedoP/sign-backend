@@ -104,5 +104,22 @@ class RemindersService extends MariaLib {
       throw Boom.badRequest("No id specified");
     }
   }
+
+  updateOne({ reminderId, title, description, date }) {
+    let set = `title='${title}', description='${description}', date='${date})'`;
+
+    // If no description insert without description.
+    if (!description) {
+      set = `title='${title}', date='${date})'`;
+    }
+    return this.update(this.tables.main, set, `reminder_id=${reminderId}`);
+  }
+  remove(reminderId) {
+    return this.update(
+      this.tables.main,
+      `active = 0`,
+      `reminder_id=${reminderId}`
+    );
+  }
 }
 module.exports = RemindersService;

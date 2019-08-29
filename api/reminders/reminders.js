@@ -43,9 +43,34 @@ router.get("/:reminderId", async (req, res, next) => {
 });
 router.patch("/:reminderId", async (req, res, next) => {
   //update one reminder by id.
+  const remindersServices = new RemindersServices();
+  const { reminderId } = req.params;
+  const { title, description, date } = req.body;
+
+  try {
+    const updatedReminder = await remindersServices.updateOne({
+      reminderId,
+      title,
+      description,
+      date
+    });
+    //************* update message response *******************
+    res.status(200).json(updatedReminder);
+  } catch (error) {
+    next(error);
+  }
 });
 router.delete("/:reminderId", async (req, res, next) => {
   //delete one reminder by id.
+  const remindersServices = new RemindersServices();
+  const { reminderId } = req.params;
+  try {
+    const removedReminder = await remindersServices.remove(reminderId);
+    //************* update message response *******************
+    res.status(200).json(removedReminder);
+  } catch (error) {
+    next(error);
+  }
 });
 
 //export
