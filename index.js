@@ -10,7 +10,7 @@ const app = express();
 
 //Server init
 app.listen(port, () => {
-  console.log("server startded at port", port);
+  console.log("server started at port", port);
 });
 
 //Routes---------------------------------------
@@ -30,18 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
 // cors
-
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, authorization"
-  );
-  res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
-  next();
-});
-
+app.use(cors())
 //--------------------------------------------
 
 //JWT strategy
