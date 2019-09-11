@@ -1,8 +1,10 @@
-//Dependencies and resources
+//External libs
 const express = require("express");
 const router = express.Router();
 const debug = require("debug")("app:api:providers");
-
+//Utils
+const { sendGoodResponse } = require("../../utils/responses")
+const { extractUserFromJWT } = require("../../utils/extractJwt")
 //Services
 const ProvidersServices = require("../../services/providers/providers");
 //JWT strategy
@@ -31,6 +33,21 @@ router.get("/:providerId", async (req, res, next) => {
     next(error);
   }
 });
+
+
+router.post("/", async (req, res, next) =>{
+  try{
+      const { body } = req
+      const userId = extractUserFromJWT(req)
+      const data = {...body, userId}
+      const providersServices = new ProvidersServices()
+      const addedProvider = await providersServices.createOne(data)
+      debug(addedProvider)
+      sendGoodResponse({res,data:addedProvider})
+  }catch(error){
+    next(error)
+  }
+})
 
 router.patch("/:providerId", async (req, res, next) => {
   try {

@@ -1,5 +1,5 @@
 module.exports = {
-    sendGoodResponse(res, message, statusCode, data) {
+    sendGoodResponse({res, message = "", statusCode ="200", data}) {
             res.status(statusCode).json({
                 message, statusCode, error : "", data
             })

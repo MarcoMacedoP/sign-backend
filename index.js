@@ -80,5 +80,5 @@ app.use(errorHandler);
 
 //Views
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "Home is where the haunt is..." });
+  res.status(200).json({ message: "Home de la API rest. 😎🎶" });
 });

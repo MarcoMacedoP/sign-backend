@@ -1,10 +1,11 @@
-/*
+/**
     @Author: Marco Macedo
     @Description: This fuction extract the JSON WEB TOKEN from the request
                     This will NOT validate the Token, just extract the information of it.
                     VALIDATE THE TOKEN BEFORE USING THIS FUNCTION
 */
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken")
+const debug = require("debug")("app:extractJWT")
 
 function extractJwt(req) {
   const { authorization } = req.headers;
@@ -17,4 +18,22 @@ function extractJwt(req) {
   }
 }
 
-module.exports = { extractJwt };
+
+
+/**
+ * @description This fuction will return the user id from the request. 
+ * @param req The express request object.
+ * @returns the user id 
+ */
+function extractUserFromJWT (req){
+
+  const token = extractJwt(req)
+  debug(token)
+  const userId = token.sub;
+  return userId
+
+}
+
+
+
+module.exports = { extractJwt, extractUserFromJWT };

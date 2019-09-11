@@ -92,4 +92,12 @@ CREATE TABLE IF NOT EXISTS reminders_providers(
 )CHARACTER SET utf8 COLLATE utf8_spanish_ci;
 
 
-INSERT INTO reminders (title, description, date) VALUES ("TITULO", "DESCRIPCION", '1970-01-02');
+CREATE TABLE IF NOT EXISTS  projects (
+    project_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name`  VARCHAR(40) NOT NULL,   
+    `description` TEXT NOT NULL,
+    cut_date TIMESTAMP NOT NULL,
+    initial_cost FLOAT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
+)CHARACTER SET utf8 COLLATE utf8_spanish_ci;

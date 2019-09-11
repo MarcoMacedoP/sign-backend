@@ -17,6 +17,18 @@ class ProvidersServices {
     const provider = await this.mariadb.read(this.table, query);
     return provider;
   }
+  createOne({name, lastname, email, phone, imageUrl,about}){
+    const rows = "(name, lastname, email, phone, image_url, about)";
+    const values = [
+      name,
+      lastname,
+      email,
+      phone,
+      imageUrl,
+      about 
+    ]  
+    return this.mariadb.create(this.table, rows, values)
+  }
   async update({ providerId, data }) {
     const { name, lastname, email, phone, imageUrl, about } = data;
 
