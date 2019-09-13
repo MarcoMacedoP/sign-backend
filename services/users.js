@@ -6,12 +6,12 @@ class UsersServices {
     this.table = "users";
     this.mariadb = new MariaLib();
   }
-  async signUp({ name, lastname, password, email }) {
+  async signUp({ name, lastname, password, email, type }) {
     //Register user and after that check if is created
     const { insertId } = await this.mariadb.create(
       this.table,
-      "(email, name, lastname, password)",
-      [ email, name, lastname, password ]
+      "(email, name, lastname, password, type)",
+      [ email, name, lastname, password, type ]
     );
 
     if (insertId) {

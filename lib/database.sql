@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS users(
     profile_pic_url VARCHAR(255),
     biography TEXT,
     job_title VARCHAR(255),
+    type ENUM ('1','2','3') NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
 )CHARACTER SET utf8 COLLATE utf8_spanish_ci;
@@ -98,6 +99,7 @@ CREATE TABLE IF NOT EXISTS  projects (
     `description` TEXT NOT NULL,
     cut_date TIMESTAMP NOT NULL,
     initial_cost FLOAT NOT NULL,
+    active  TINYINT (1) DEFAULT 1,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
 )CHARACTER SET utf8 COLLATE utf8_spanish_ci;

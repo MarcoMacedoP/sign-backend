@@ -21,6 +21,7 @@ const providersServicesApiRoute = require("./api/providers/services");
 const providersProductsApiRoute = require("./api/providers/products");
 const clientsApiRoute = require("./api/clients");
 const remindersApiRoute = require("./api/reminders/reminders");
+const projectApiRoute = require("./api/projects/projects");
 const testRoute = require("./api/test");
 //---------------------------------------------
 
@@ -63,7 +64,7 @@ app.use(
   clientsApiRoute
 );
 app.use("/api/reminders", remindersApiRoute);
-
+app.use("/api/projects",passport.authenticate("jwt", { session: false }), projectApiRoute);
 //Error handlers----------
 const {
   logErrors,
