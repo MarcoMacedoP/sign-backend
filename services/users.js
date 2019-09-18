@@ -1,4 +1,5 @@
 const MariaLib = require("../lib/mariadb");
+const bcrypt = require("bcrypt");
 const debug = require("debug")("app:services:users");
 
 class UsersServices {
@@ -8,10 +9,12 @@ class UsersServices {
   }
   async signUp({ name, lastname, password, email }) {
     //Register user and after that check if is created
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
     const { insertId } = await this.mariadb.create(
       this.table,
       "(email, name, lastname, password)",
-      [ email, name, lastname, password ]
+      [email, name, lastname, hashedPassword]
     );
 
     if (insertId) {
@@ -28,14 +31,11 @@ class UsersServices {
   }
   async getByID({ userId }) {
     //Get one method decapreteded
-    const user = await this.mariadb.getOne(
-      this.table,
-      `user_id = ${userId}`
-    );
+    const user = await this.mariadb.getOne(this.table, `user_id = ${userId}`);
     return user;
   }
   async getByEmail({ email }) {
-    const [ user ] = await this.mariadb.read(
+    const [user] = await this.mariadb.read(
       "users",
       `WHERE email = '${email}'
       `
