@@ -8,6 +8,8 @@ const debug = require("debug")("app:api:auth");
 const UserServices = require("../services/users");
 //basic strategy
 require("../utils/auth/strategies/basic");
+//utils
+const {sendGoodResponse} = require("../utils/responses");
 router.post("/login", async (req, res, next) => {
   //cambiar a log in
   ///Login and obtain token
@@ -20,7 +22,7 @@ router.post("/signup", async (req, res, next) => {
   try {
     debug(req.body);
     const userServices = new UserServices();
-    const { email, password } = await userServices.signUp(req.body);
+    const {email, password} = await userServices.signUp(req.body);
     // Add result to basic auth header and authtenticate
     const authHeader = `${email}:${password}`;
     const buffer = Buffer.from(authHeader);
@@ -31,6 +33,19 @@ router.post("/signup", async (req, res, next) => {
     next(error);
   }
 });
+
+router.post("/token", (req, res) => {
+  //refresh the token from an existing token
+  const {token} = req.body;
+  const {sub, email} = jwt.decode(token);
+  const newToken = signToken({sub, email});
+  sendGoodResponse({
+    response: res,
+    message: "Token updated succesfully",
+    data: {token: newToken}
+  });
+});
+
 function authenticateUser(req, res, next) {
   passport.authenticate("basic", function(error, user) {
     try {
@@ -40,18 +55,19 @@ function authenticateUser(req, res, next) {
       if (!user) {
         next(new Error("No user"));
       } else {
-        req.logIn(user, { session: false }, async (error) => {
+        req.logIn(user, {session: false}, async error => {
           if (error) {
             next(new Error("Bad pass"));
           } else {
-            const payload = {
-              sub   : user.user_id,
-              email : user.email
-            };
-            const token = jwt.sign(payload, config.authJwtSecret, {
-              expiresIn : "15m"
+            const token = signToken({
+              sub: user.user_id,
+              email: user.email
             });
-            res.status(200).json({ accesToken: token });
+            sendGoodResponse({
+              response: res,
+              message: "good auth",
+              data: {token}
+            });
           }
         });
       }
@@ -59,5 +75,14 @@ function authenticateUser(req, res, next) {
       next(new Error("Error on auth"));
     }
   })(req, res, next);
+}
+function signToken({sub, email}) {
+  const payload = {
+    sub,
+    email
+  };
+  return jwt.sign(payload, config.authJwtSecret, {
+    expiresIn: "15m"
+  });
 }
 module.exports = router;
