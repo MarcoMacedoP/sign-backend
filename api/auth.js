@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const config = require("../config/");
+const Boom = require("@hapi/boom");
 const debug = require("debug")("app:api:auth");
 //Services
 const UserServices = require("../services/users");
@@ -53,11 +54,11 @@ function authenticateUser(req, res, next) {
         next(error);
       }
       if (!user) {
-        next(new Error("No user"));
+        next(Boom.unauthorized());
       } else {
         req.logIn(user, {session: false}, async error => {
           if (error) {
-            next(new Error("Bad pass"));
+            next(Boom.unauthorized());
           } else {
             const token = signToken({
               sub: user.user_id,
@@ -72,7 +73,7 @@ function authenticateUser(req, res, next) {
         });
       }
     } catch (error) {
-      next(new Error("Error on auth"));
+      next(Boom.unauthorized());
     }
   })(req, res, next);
 }
