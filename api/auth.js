@@ -21,9 +21,9 @@ router.post("/login", async (req, res, next) => {
 router.post("/signup", async (req, res, next) => {
   //Signup and obtain token
   try {
-    debug(req.body);
+    const {email, password} = req.body;
     const userServices = new UserServices();
-    const {email, password} = await userServices.signUp(req.body);
+    await userServices.signUp(req.body);
     // Add result to basic auth header and authtenticate
     const authHeader = `${email}:${password}`;
     const buffer = Buffer.from(authHeader);
@@ -48,7 +48,9 @@ router.post("/token", (req, res) => {
 });
 
 function authenticateUser(req, res, next) {
+  debug(req.headers);
   passport.authenticate("basic", function(error, user) {
+    debug(user);
     try {
       if (error) {
         next(error);
@@ -67,7 +69,16 @@ function authenticateUser(req, res, next) {
             sendGoodResponse({
               response: res,
               message: "good auth",
-              data: {token}
+              data: {
+                token,
+                user: {
+                  name: user.name,
+                  lastname: user.lastname,
+                  picture: user.profile_pic_url,
+                  bio: user.biography,
+                  job: user.job_title
+                }
+              }
             });
           }
         });
