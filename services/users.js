@@ -7,34 +7,41 @@ class UsersServices {
     this.table = "users";
     this.mariadb = new MariaLib();
   }
-  async signUp({ name, lastname, password, email }) {
-    //Register user and after that check if is created
+  /**Register user and after that check if is created
+   * @param {*} name the name of the user
+   * @param {*} lastname the lastname of the user
+   * @param {*} password the passoword of the user
+   * @param {*} email the email of the user
+   */
+  async signUp({name, lastname, password, email}) {
+    //encrypt password
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const { insertId } = await this.mariadb.create(
-      this.table,
-      "(email, name, lastname, password)",
-      [email, name, lastname, hashedPassword]
-    );
-
-    if (insertId) {
-      const user = await this.mariadb.read(
-        //SELECT email, password  FROM users WHERE email = ?
-        this.table,
-        `WHERE user_id = '${insertId}'`,
-        "email, password"
+    //return promise that after create the user return it
+    return this.mariadb
+      .create(this.table, "(email, name, lastname, password)", [
+        email,
+        name,
+        lastname,
+        hashedPassword
+      ])
+      .then(({insertId}) =>
+        this.mariadb.read(
+          this.table,
+          `WHERE user_id = '${insertId}'`,
+          "email, password"
+        )
       );
-      return user[0];
-    } else {
-      throw new Error("Error on services");
-    }
   }
-  async getByID({ userId }) {
+  async getByID({userId}) {
     //Get one method decapreteded
-    const user = await this.mariadb.getOne(this.table, `user_id = ${userId}`);
+    const user = await this.mariadb.getOne(
+      this.table,
+      `user_id = ${userId}`
+    );
     return user;
   }
-  async getByEmail({ email }) {
+  async getByEmail({email}) {
     const [user] = await this.mariadb.read(
       "users",
       `WHERE email = '${email}'

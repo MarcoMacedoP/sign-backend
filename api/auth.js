@@ -18,25 +18,37 @@ router.post("/login", async (req, res, next) => {
   authenticateUser(req, res, next);
 });
 
+//Signup and obtain token
 router.post("/signup", async (req, res, next) => {
-  //Signup and obtain token
   try {
     const {email, password} = req.body;
     const userServices = new UserServices();
-    await userServices.signUp(req.body);
-    // Add result to basic auth header and authtenticate
-    const authHeader = `${email}:${password}`;
-    const buffer = Buffer.from(authHeader);
-    const authHeaderBase64 = buffer.toString("base64");
-    req.headers.authorization = `Basic ${authHeaderBase64}==`;
-    authenticateUser(req, res, next);
+    const user = await userServices.signUp(req.body);
+    debug(user);
+    if (user) {
+      //TODO: put this into a single file
+      // Add result to basic auth header and authtenticate
+      const authHeader = `${email}:${password}`;
+      const buffer = Buffer.from(authHeader);
+      const authHeaderBase64 = buffer.toString("base64");
+      req.headers.authorization = `Basic ${authHeaderBase64}==`;
+      authenticateUser(req, res, next);
+    }
   } catch (error) {
-    next(error);
+    debug("Error:", Object.keys(error));
+    debug(error.code);
+    //duplicate entry on signup
+    if (error.code === "ER_DUP_ENTRY") {
+      debug("duplicate entry");
+      next(Boom.unauthorized());
+    } else {
+      next(error);
+    }
   }
 });
 
+//refresh the token from an existing token
 router.post("/token", (req, res) => {
-  //refresh the token from an existing token
   const {token} = req.body;
   const {sub, email} = jwt.decode(token);
   const newToken = signToken({sub, email});
