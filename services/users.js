@@ -37,9 +37,9 @@ class UsersServices {
   async updateUser({email, name, lastname, bio, profilePic, job}) {
     //get the user, if not exist return 404
     try {
-      const user = await this.getByEmail({email});
-      debug(`user : ${user}`);
-      if (!user) {
+      const {user_id: userId} = await this.getByEmail({email});
+      debug(userId);
+      if (!userId) {
         throw Boom.notFound();
       } else {
         //return promise with existing values
@@ -47,11 +47,9 @@ class UsersServices {
                     lastname='${lastname}', biography='${bio}',
                     profile_pic_url='${profilePic}', job_title='${job}'`;
 
-        return this.mariadb.update(
-          this.table,
-          setValues,
-          `user_id=${user.user_id}`
-        );
+        return this.mariadb
+          .update(this.table, setValues, `user_id=${userId}`)
+          .then(() => this.getByID({userId}));
       }
     } catch (error) {
       debug(error);
@@ -59,20 +57,26 @@ class UsersServices {
     }
   }
 
-  /**Gets a user by his id.  */
-  async getByID({userId}) {
-    const user = await this.mariadb.getOne(
-      this.table,
-      `user_id = ${userId}`
-    );
-    return user;
+  /**Gets a user by his id.
+   *  Return the first user finded with the provided id,
+   * anyway it should only be one user with the id
+   * @returns Promise with the user data
+   */
+  getByID({userId}) {
+    return this.mariadb
+      .read(
+        this.table,
+        `WHERE user_id = ${userId}`,
+        "name, lastname, email, user_id, profile_pic_url, biography"
+      )
+      .then(users => users[0]);
   }
   /**Gets a user by his email.
-   * Return the first user finded with the provided emial,
+   * Return the first user finded with the provided email,
    * anyway it should only be one user with the email
-   * @returns Promise with the user
+   * @returns Promise with the user data
    */
-  async getByEmail({email}) {
+  getByEmail({email}) {
     return this.mariadb
       .read(this.table, `WHERE email = '${email}'`)
       .then(users => users[0]);

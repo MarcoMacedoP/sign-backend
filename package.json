@@ -10,7 +10,8 @@
     "audit:background": "pm2 monit",
     "stop:background": "pm2 delete index.js",
     "dev": "nodemon index.js",
-    "dev:debug": "DEBUG=express:*,app:* npm run dev"
+    "dev:debug": "DEBUG=express:*,app:* npm run dev",
+    "clean-uploads": "rm -r ./public/static/uploads/*"
   },
   "author": "Marco Macedo",
   "license": "ISC",

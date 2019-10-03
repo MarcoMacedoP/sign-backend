@@ -33,14 +33,15 @@ router.put(
     debug(req.body);
     const userServices = new UserServices();
     try {
-      const response = await userServices.updateUser({
+      const updatedUser = await userServices.updateUser({
         ...req.body,
         profilePic: profilePicUrl
       });
       sendGoodResponse({
         response: res,
         statusCode: 201,
-        data: response
+        data: updatedUser,
+        message: "User updated"
       });
     } catch (error) {
       sendBadResponse({
