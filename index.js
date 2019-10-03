@@ -44,9 +44,10 @@ app.use(function(req, res, next) {
   next();
 });
 //serve static files, resources from public folder
-const staticDirection = `${__dirname}/public/static/uploads/`;
-console.log(staticDirection);
-app.use("/static/uploads", express.static(staticDirection));
+app.use(
+  "/static/uploads",
+  express.static(`${__dirname}/public/static/uploads/`)
+);
 
 //--------------------------------------------
 
