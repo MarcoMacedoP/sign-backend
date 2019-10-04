@@ -34,27 +34,20 @@ class UsersServices {
         )
       );
   }
-  async updateUser({email, name, lastname, bio, profilePic, job}) {
-    //get the user, if not exist return 404
-    try {
-      const {user_id: userId} = await this.getByEmail({email});
-      debug(userId);
-      if (!userId) {
-        throw Boom.notFound();
-      } else {
-        //return promise with existing values
-        const setValues = `email = '${email}', name='${name}', 
+  /**
+   * Update a user
+   */
+  // prettier-ignore
+  async updateUser({ userId, email, name, lastname, bio, profilePic, job }) {
+    const setValues = `email = '${email}', name='${name}', 
                     lastname='${lastname}', biography='${bio}',
                     profile_pic_url='${profilePic}', job_title='${job}'`;
-
-        return this.mariadb
-          .update(this.table, setValues, `user_id=${userId}`)
-          .then(() => this.getByID({userId}));
-      }
-    } catch (error) {
-      debug(error);
-      throw Boom.notFound();
-    }
+    return this.getByID({userId}).then(user => {
+      if (!user) throw Boom.notFound(); 
+      return this.mariadb
+        .update(this.table, setValues, `user_id=${userId}`)
+        .then(() => this.getByID({userId}));
+    });
   }
 
   /**Gets a user by his id.

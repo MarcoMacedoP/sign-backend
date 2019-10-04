@@ -26,9 +26,9 @@ const testRoute = require("./api/test");
 
 //Middlewares---------------------------------
 // parse aplication/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true, limit: "50mb"}));
 // parse application/json
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: "50mb"}));
 // cors
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -74,7 +74,8 @@ app.use(
 );
 app.use(
   "/api/users",
-  passport.authenticate("jwt", {session: false}),
+
+  // passport.authenticate("jwt", {session: false}),
   usersApiRoute
 );
 app.use("/api/test", testRoute);

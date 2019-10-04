@@ -21,10 +21,11 @@ router.post("/login", async (req, res, next) => {
 //Signup and obtain token
 router.post("/signup", async (req, res, next) => {
   try {
+    debug("request.body : ");
+    debug(req.body);
     const {email, password} = req.body;
     const userServices = new UserServices();
     const user = await userServices.signUp(req.body);
-    debug(user);
     if (user) {
       //TODO: put this into a single file
       // Add result to basic auth header and authtenticate

@@ -27,15 +27,16 @@ router.put(
   "/:userId",
   fileUpload.single("profilePic"),
   async (req, res, next) => {
-    debug(config.serverUrl);
-    const profilePicUrl = `${config.serverUrl}/static/uploads/${req.file.filename}`;
-    debug(profilePicUrl);
     debug(req.body);
-    const userServices = new UserServices();
+    debug(req.params.userId);
     try {
+      const profilePicUrl = `${config.serverUrl}/static/uploads/${req.file.filename}`;
+      debug(profilePicUrl);
+      const userServices = new UserServices();
       const updatedUser = await userServices.updateUser({
         ...req.body,
-        profilePic: profilePicUrl
+        profilePic: profilePicUrl,
+        userId: req.params.userId
       });
       sendGoodResponse({
         response: res,
@@ -44,11 +45,7 @@ router.put(
         message: "User updated"
       });
     } catch (error) {
-      sendBadResponse({
-        response: res,
-        message: error.message,
-        statusCode: error.statusCode
-      });
+      next(error);
     }
   }
 );
