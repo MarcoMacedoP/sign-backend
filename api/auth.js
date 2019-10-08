@@ -85,9 +85,10 @@ function authenticateUser(req, res, next) {
               data: {
                 token,
                 user: {
+                  id: user.user_id,
                   name: user.name,
                   lastname: user.lastname,
-                  picture: user.profile_pic_url,
+                  profilePic: user.profile_pic_url,
                   bio: user.biography,
                   job: user.job_title
                 }

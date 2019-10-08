@@ -46,7 +46,11 @@ class UsersServices {
       if (!user) throw Boom.notFound(); 
       return this.mariadb
         .update(this.table, setValues, `user_id=${userId}`)
-        .then(() => this.getByID({userId}));
+        .then(() => this.getByID({userId}))
+        .then(updatedUser => ({
+          ...updatedUser,
+          profilePic: updatedUser.profile_pic_url
+        }));
     });
   }
 
