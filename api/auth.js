@@ -12,7 +12,6 @@ require("../utils/auth/strategies/basic");
 //utils
 const {sendGoodResponse} = require("../utils/responses");
 router.post("/login", async (req, res, next) => {
-  //cambiar a log in
   ///Login and obtain token
   debug(req.headers.authorization);
   authenticateUser(req, res, next);
@@ -75,6 +74,7 @@ function authenticateUser(req, res, next) {
           if (error) {
             next(Boom.unauthorized());
           } else {
+            debug("GOOOOD RESPONSE");
             const token = signToken({
               sub: user.user_id,
               email: user.email

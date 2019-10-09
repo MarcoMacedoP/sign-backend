@@ -38,10 +38,10 @@ class UsersServices {
    * Update a user
    */
   // prettier-ignore
-  async updateUser({ userId, email, name, lastname, bio, profilePic, job }) {
-    const setValues = `email = '${email}', name='${name}', 
-                    lastname='${lastname}', biography='${bio}',
-                    profile_pic_url='${profilePic}', job_title='${job}'`;
+  async updateUser({ userId, name, lastname, bio, profilePic, job }) {
+    const setValues = `name='${name}', lastname='${lastname}',
+                     biography='${bio}', profile_pic_url='${profilePic}',
+                     job_title='${job}'`;
     return this.getByID({userId}).then(user => {
       if (!user) throw Boom.notFound(); 
       return this.mariadb
