@@ -6,6 +6,7 @@ module.exports = {
   dbPort: process.env.DB_PORT,
   dbPassword: process.env.DB_PASSWORD,
   dbUser: process.env.DB_USER,
+  mongoURI: process.env.MONGO_URI,
   //SYSTEM CONFIG
   dev: process.env.NODE_ENV !== "production",
   port: process.env.SERVER_PORT,
