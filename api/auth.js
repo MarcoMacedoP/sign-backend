@@ -1,14 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
 const passport = require("passport");
-const config = require("../config/");
 const Boom = require("@hapi/boom");
 const debug = require("debug")("app:api:auth");
 //Services
 const UserServices = require("../services/users");
+const RefreshToken = require("../services/refreshToken");
+//utils
+const signToken = require("../utils/auth/signToken");
+
 //basic strategy
 require("../utils/auth/strategies/basic");
+//jwt-strategy
+require("../utils/auth/strategies/jwt");
+
 //utils
 const {sendGoodResponse} = require("../utils/responses");
 router.post("/login", async (req, res, next) => {
@@ -48,15 +53,22 @@ router.post("/signup", async (req, res, next) => {
 });
 
 //refresh the token from an existing token
-router.post("/token", (req, res) => {
-  const {token} = req.body;
-  const {sub, email} = jwt.decode(token);
-  const newToken = signToken({sub, email});
-  sendGoodResponse({
-    response: res,
-    message: "Token updated succesfully",
-    data: {token: newToken}
-  });
+router.post("/token", async (req, res, next) => {
+  const {refreshToken} = req.body;
+  try {
+    const refresh = new RefreshToken();
+    const accessToken = await refresh.getAccessTokenFromRefreshToken(
+      refreshToken
+    );
+    debug(accessToken);
+    sendGoodResponse({
+      response: res,
+      message: "Token updated succesfully",
+      data: {accessToken}
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 function authenticateUser(req, res, next) {
@@ -75,15 +87,23 @@ function authenticateUser(req, res, next) {
             next(Boom.unauthorized());
           } else {
             debug("GOOOOD RESPONSE");
-            const token = signToken({
+            const accessToken = signToken({
               sub: user.user_id,
               email: user.email
             });
+            const refreshToken = await new RefreshToken().create(
+              user.user_id,
+              user.email
+            );
+
             sendGoodResponse({
               response: res,
               message: "good auth",
               data: {
-                token,
+                token: {
+                  accessToken,
+                  refreshToken
+                },
                 user: {
                   id: user.user_id,
                   name: user.name,
@@ -102,13 +122,5 @@ function authenticateUser(req, res, next) {
     }
   })(req, res, next);
 }
-function signToken({sub, email}) {
-  const payload = {
-    sub,
-    email
-  };
-  return jwt.sign(payload, config.authJwtSecret, {
-    expiresIn: "15m"
-  });
-}
+
 module.exports = router;
