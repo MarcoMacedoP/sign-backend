@@ -22,8 +22,8 @@ function authenticateUser(req, res, next) {
               sub: user.user_id,
               email: user.email
             });
-
-            const refreshToken = await new RefreshToken().create(
+            const refreshTokenServices = new RefreshToken();
+            const refreshToken = await refreshTokenServices.create(
               user.user_id,
               user.email
             );

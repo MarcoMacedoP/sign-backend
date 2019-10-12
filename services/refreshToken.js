@@ -2,7 +2,7 @@
 const MongoLib = require("../lib/mongodb");
 const randtoken = require("rand-token");
 const Boom = require("@hapi/boom");
-// const debug = require("debug")("app:services:refreshToken");
+const debug = require("debug")("app:services:refreshToken");
 //services
 const signToken = require("../utils/auth/signToken");
 
@@ -12,17 +12,23 @@ class RefreshToken {
     this.mongodb = new MongoLib(collection);
   }
   create(userId, email) {
-    const token = randtoken.uid(256);
-    const date = new Date();
-    return this.mongodb
-      .createOne({
-        userId,
-        token,
-        date,
-        email
-      })
-      .then(({token}) => token);
+    const refreshToken = {
+      token: randtoken.uid(256),
+      date: new Date(),
+      userId,
+      email
+    };
+    return this.checkIfUserHasToken(userId).then(userHasToken =>
+      userHasToken
+        ? this.mongodb
+            .updateOne({userId}, refreshToken)
+            .then(({token}) => token)
+        : this.mongodb
+            .createOne(refreshToken)
+            .then(({token}) => token)
+    );
   }
+
   /** gets a refresh token and returns a new access token
    * Search for the token on database an if exists returns
    * a new access token
@@ -59,6 +65,15 @@ class RefreshToken {
         }
         return true;
       });
+  }
+  /** Search for userId on refreshToken list and if
+   *
+   */
+  checkIfUserHasToken(userId) {
+    return this.mongodb.readOne({userId}).then(refreshToken => {
+      debug(refreshToken);
+      return refreshToken ? true : false;
+    });
   }
 }
 module.exports = RefreshToken;

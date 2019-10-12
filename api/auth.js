@@ -53,7 +53,6 @@ router.post("/token", async (req, res, next) => {
     const accessToken = await refresh.getAccessTokenFromRefreshToken(
       refreshToken
     );
-    debug(accessToken);
     sendGoodResponse({
       response: res,
       message: "Token updated succesfully",
