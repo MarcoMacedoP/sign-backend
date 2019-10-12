@@ -2,7 +2,7 @@
 const MongoLib = require("../lib/mongodb");
 const randtoken = require("rand-token");
 const Boom = require("@hapi/boom");
-const debug = require("debug")("app:services:refreshToken");
+// const debug = require("debug")("app:services:refreshToken");
 //services
 const signToken = require("../utils/auth/signToken");
 
@@ -46,16 +46,18 @@ class RefreshToken {
    * that are received on param
    *
    * @param refreshToken the token to be deleted
-   * @return true if token is deleted successfully
+   * @return {Promise} that returns true if token is deleted successfully
    * @throw error if token is not on list or if an error
    *         ocurred while deleting refreshToken
    */
   removeRefreshToken(refreshToken) {
     return this.mongodb
       .removeOne({token: refreshToken})
-      .then(response => {
-        debug(response);
-        return response;
+      .then(({deletedCount}) => {
+        if (deletedCount === 0) {
+          throw Boom.notFound();
+        }
+        return true;
       });
   }
 }

@@ -14,7 +14,11 @@ const createBasicAuthHeader = require("../utils/auth/createBasicAuthHeader");
 
 ///Login and obtain token
 router.post("/login", async (req, res, next) => {
-  authenticateUser(req, res, next);
+  try {
+    await authenticateUser(req, res, next);
+  } catch (error) {
+    next(error);
+  }
 });
 
 //Signup and obtain token
@@ -54,6 +58,20 @@ router.post("/token", async (req, res, next) => {
       response: res,
       message: "Token updated succesfully",
       data: {accessToken}
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+//delete a refresh token
+router.delete("/token", async (req, res, next) => {
+  const {refreshToken} = req.body;
+  const tokenServices = new RefreshToken();
+  try {
+    await tokenServices.removeRefreshToken(refreshToken);
+    sendGoodResponse({
+      response: res,
+      message: "Token deleted succesfully"
     });
   } catch (error) {
     next(error);

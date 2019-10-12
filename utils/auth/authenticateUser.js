@@ -1,12 +1,12 @@
 const passport = require("passport");
 const signToken = require("./signToken");
+const RefreshToken = require("../../services/refreshToken");
+const {sendGoodResponse} = require("../responses");
 
 require("./strategies/basic");
 
 function authenticateUser(req, res, next) {
-  debug(req.headers);
   passport.authenticate("basic", function(error, user) {
-    debug(user);
     try {
       if (error) {
         next(error);
@@ -18,11 +18,11 @@ function authenticateUser(req, res, next) {
           if (error) {
             next(Boom.unauthorized());
           } else {
-            debug("GOOOOD RESPONSE");
             const accessToken = signToken({
               sub: user.user_id,
               email: user.email
             });
+
             const refreshToken = await new RefreshToken().create(
               user.user_id,
               user.email
