@@ -8,14 +8,14 @@ const signToken = require("../utils/auth/signToken");
 
 class RefreshToken {
   constructor() {
-    this.collection = "tokens";
-    this.mongo = new MongoLib();
+    const collection = "tokens";
+    this.mongodb = new MongoLib(collection);
   }
   create(userId, email) {
     const token = randtoken.uid(256);
     const date = new Date();
-    return this.mongo
-      .createOne(this.collection, {
+    return this.mongodb
+      .createOne({
         userId,
         token,
         date,
@@ -28,9 +28,9 @@ class RefreshToken {
    * a new access token
    * @param {*} token the old refresh token
    */
-  async getAccessTokenFromRefreshToken(token) {
-    return this.mongo
-      .readOne(this.collection, {token}) // prettier-ignore
+  getAccessTokenFromRefreshToken(token) {
+    return this.mongodb
+      .readOne({token}) // prettier-ignore
       .then(refreshToken => {
         if (!refreshToken) {
           throw Boom.unauthorized();
@@ -39,6 +39,23 @@ class RefreshToken {
           sub: refreshToken.userId,
           email: refreshToken.email
         });
+      });
+  }
+
+  /**Remove from database the refreshToken
+   * that are received on param
+   *
+   * @param refreshToken the token to be deleted
+   * @return true if token is deleted successfully
+   * @throw error if token is not on list or if an error
+   *         ocurred while deleting refreshToken
+   */
+  removeRefreshToken(refreshToken) {
+    return this.mongodb
+      .removeOne({token: refreshToken})
+      .then(response => {
+        debug(response);
+        return response;
       });
   }
 }
