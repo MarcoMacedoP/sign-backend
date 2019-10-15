@@ -17,6 +17,11 @@ router.get("/:userId", async (req, res, next) => {
     const {userId} = req.params;
     const userServices = new UserServices();
     const user = await userServices.getByID({userId});
+    sendGoodResponse({
+      response: res,
+      message: "getted user",
+      data: user
+    });
     res.status(200).json(user);
   } catch (error) {
     next(error);
@@ -27,17 +32,17 @@ router.put(
   "/:userId",
   fileUpload.single("profilePic"),
   async (req, res, next) => {
-    debug(req.body);
+    debug(req.headers);
     debug(req.params.userId);
     try {
       const profilePicUrl = `${config.serverUrl}/static/uploads/${req.file.filename}`;
-      debug(profilePicUrl);
       const userServices = new UserServices();
       const updatedUser = await userServices.updateUser({
         ...req.body,
         profilePic: profilePicUrl,
         userId: req.params.userId
       });
+      debug(updatedUser);
       sendGoodResponse({
         response: res,
         statusCode: 201,

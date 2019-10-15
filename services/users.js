@@ -46,11 +46,11 @@ class UsersServices {
       if (!user) throw Boom.notFound(); 
       return this.mariadb
         .update(this.table, setValues, `user_id=${userId}`)
-        .then(() => this.getByID({userId}))
-        .then(updatedUser => ({
-          ...updatedUser,
-          profilePic: updatedUser.profile_pic_url
-        }));
+        .then(() => this.getByID({ userId }))
+        .then(updatedUser => {
+          debug(updatedUser)
+          return updatedUser
+        });
     });
   }
 
@@ -64,9 +64,16 @@ class UsersServices {
       .read(
         this.table,
         `WHERE user_id = ${userId}`,
-        "name, lastname, email, user_id, profile_pic_url, biography"
+        "name, lastname, email, user_id, profile_pic_url, biography, job_title"
       )
-      .then(users => users[0]);
+      .then(users => ({
+        id: users[0].user_id,
+        name: users[0].name,
+        lastname: users[0].lastname,
+        profilePic: users[0].profile_pic_url,
+        bio: users[0].biography,
+        job: users[0].job_title
+      }));
   }
   /**Gets a user by his email.
    * Return the first user finded with the provided email,

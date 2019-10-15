@@ -32,7 +32,7 @@ router.post("/signup", async (req, res, next) => {
         email,
         password
       );
-      authenticateUser(req, res, next);
+      await authenticateUser(req, res, next);
     }
   } catch (error) {
     //duplicate entry on signup
@@ -48,6 +48,8 @@ router.post("/signup", async (req, res, next) => {
 //refresh the token from an existing token
 router.post("/token", async (req, res, next) => {
   const {refreshToken} = req.body;
+  debug(req.body);
+
   try {
     const refresh = new RefreshToken();
     const accessToken = await refresh.getAccessTokenFromRefreshToken(

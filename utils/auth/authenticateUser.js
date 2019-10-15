@@ -2,7 +2,7 @@ const passport = require("passport");
 const signToken = require("./signToken");
 const RefreshToken = require("../../services/refreshToken");
 const {sendGoodResponse} = require("../responses");
-
+const Boom = require("@hapi/boom");
 require("./strategies/basic");
 
 function authenticateUser(req, res, next) {

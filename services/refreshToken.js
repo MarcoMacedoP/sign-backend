@@ -4,6 +4,8 @@ const randtoken = require("rand-token");
 const Boom = require("@hapi/boom");
 const debug = require("debug")("app:services:refreshToken");
 //services
+const UserServices = require("../services/users");
+//utils
 const signToken = require("../utils/auth/signToken");
 
 class RefreshToken {
@@ -38,6 +40,7 @@ class RefreshToken {
     return this.mongodb
       .readOne({token}) // prettier-ignore
       .then(refreshToken => {
+        debug(token);
         if (!refreshToken) {
           throw Boom.unauthorized();
         }
@@ -74,6 +77,13 @@ class RefreshToken {
       debug(refreshToken);
       return refreshToken ? true : false;
     });
+  }
+  //gets a user from a refresh token if user exist
+  getUserFromRefreshToken(refreshToken) {
+    const userServices = new UserServices();
+    return this.mongodb
+      .readOne({token: refreshToken})
+      .then(({userId}) => userId && userServices.getByID({userId}));
   }
 }
 module.exports = RefreshToken;
