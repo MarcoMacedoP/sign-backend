@@ -81,7 +81,7 @@ app.use("/api/test", testRoute);
 
 app.use(
   "/api/clients",
-  passport.authenticate("jwt", {session: false}),
+  // passport.authenticate("jwt", {session: false}),
   clientsApiRoute
 );
 app.use("/api/reminders", remindersApiRoute);

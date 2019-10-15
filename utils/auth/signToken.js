@@ -7,7 +7,7 @@ function signToken({sub, email}) {
     email
   };
   return jwt.sign(payload, config.authJwtSecret, {
-    expiresIn: 10
+    expiresIn: 150
   });
 }
 module.exports = signToken;
