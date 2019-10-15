@@ -1,14 +1,24 @@
 const MariaLib = require("../../lib/mariadb");
+//services
+const ExpensesServices = require("./expenses");
 class ProvidersServices {
   constructor() {
     this.table = "providers";
     this.mariadb = new MariaLib();
+    this.expenses = new ExpensesServices();
   }
   getAll({userId}) {
-    return this.mariadb.read(
-      this.table,
-      `WHERE user_id = ${userId} AND active=1`
-    );
+    return this.mariadb
+      .read(this.table, `WHERE user_id = ${userId} AND active=1`)
+      .then(providers =>
+        Promise.all(
+          providers.map(provider =>
+            this.expenses
+              .getAll(provider.provider_id)
+              .then(expenses => ({...provider, expenses}))
+          )
+        )
+      );
   }
   getOne(providerId) {
     const query = `WHERE provider_id = ${providerId}`; // WHERE query;
