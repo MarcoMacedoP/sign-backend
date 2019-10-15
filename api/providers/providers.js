@@ -2,20 +2,23 @@
 const express = require("express");
 const router = express.Router();
 const debug = require("debug")("app:api:providers");
-
+const {sendGoodResponse} = require("../../utils/responses");
 //Services
 const ProvidersServices = require("../../services/providers/providers");
-//JWT strategy
-
 //Extract JWT
-const { extractJwt } = require("../../utils/extractJwt");
+const {extractJwt} = require("../../utils/extractJwt");
 
 router.get("/", async (req, res, next) => {
   try {
-    const { sub: userId } = extractJwt(req); //Extract sub from JWT and store it as userId
+    const {sub: userId} = extractJwt(req); //Extract sub from JWT and store it as userId
     const providersServices = new ProvidersServices();
-    const providers = await providersServices.getAll({ userId });
-    res.status(200).json(providers);
+    const providers = await providersServices.getAll({userId});
+    sendGoodResponse({
+      response: res,
+      message: "getted provider",
+      statusCode: 200,
+      data: providers
+    });
   } catch (error) {
     next(error);
   }
@@ -23,37 +26,71 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:providerId", async (req, res, next) => {
   try {
-    const { providerId } = req.params;
+    const {providerId} = req.params;
     const providersServices = new ProvidersServices();
-    const provider = await providersServices.getOne({ providerId });
-    res.status(200).json(provider);
+    const provider = await providersServices.getOne({providerId});
+    sendGoodResponse({
+      response: res,
+      message: "getted provider",
+      statusCode: 200,
+      data: provider
+    });
   } catch (error) {
     next(error);
   }
 });
-
-router.patch("/:providerId", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   try {
-    const { providerId } = req.params;
-    const data = req.body;
+    const {sub: userId} = extractJwt(req);
+    const provider = Object.keys(req.body).map(key => req.body[key]);
     const providersServices = new ProvidersServices();
-    const result = await providersServices.update({
-      providerId,
-      data
+    const createdProvider = await providersServices.create(
+      provider,
+      userId
+    );
+
+    sendGoodResponse({
+      response: res,
+      message: "created provider",
+      statusCode: 200,
+      data: createdProvider
     });
-    res.status(200).json(result);
   } catch (error) {
+    next(error);
+  }
+});
+router.put("/:providerId", async (req, res, next) => {
+  try {
+    const {providerId} = req.params;
+    debug(typeof providerId);
+    const providersServices = new ProvidersServices();
+    const provider = await providersServices.update(
+      providerId,
+      req.body
+    );
+    sendGoodResponse({
+      response: res,
+      message: "updated provider",
+      statusCode: 201,
+      data: provider
+    });
+  } catch (error) {
+    debug(error);
     next(error);
   }
 });
 router.delete("/:providerId", async (req, res, next) => {
   try {
-    const { providerId } = req.params;
+    const {providerId} = req.params;
     const providersServices = new ProvidersServices();
-    const result = await providersServices.remove({
+    await providersServices.remove({
       providerId
     });
-    res.status(200).json(result);
+    sendGoodResponse({
+      response: res,
+      message: "deleted provider",
+      statusCode: 203
+    });
   } catch (error) {
     next(error);
   }

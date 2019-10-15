@@ -3,14 +3,14 @@ const express = require("express");
 const router = express.Router();
 const debug = require("debug")("app:api:services");
 //services
-const ProvidersServicesServices = require("../../services/providers/servicesOrProducts");
+const ProvidersServicesServices = require("../../services/providers/incomes");
 //functions
-const { extractJwt } = require("../../utils/extractJwt");
+const {extractJwt} = require("../../utils/extractJwt");
 
 //Routes-----------------------------------------------------------------------------
 router.get("/", async (req, res, next) => {
   //get all
-  const { providerId } = req.body;
+  const {providerId} = req.body;
   debug(req.body);
   const providersServicesServices = new ProvidersServicesServices();
   try {
@@ -30,14 +30,16 @@ router.post("/", async (req, res, next) => {
     const {insertId : addedServiceId} = await providersServicesServices.create({
                  name, description, cost, costPerHour, providerId}); // prettier-ignore
 
-    res.status(200).json({ addedServiceId, message: "Service created" });
+    res
+      .status(200)
+      .json({addedServiceId, message: "Service created"});
   } catch (error) {
     next(error);
   }
 });
 router.get("/:serviceId", async (req, res, next) => {
   //get one service by it's id
-  const { serviceId } = req.params;
+  const {serviceId} = req.params;
   const providersServicesServices = new ProvidersServicesServices();
   try {
     const updatedService = await providersServicesServices.getOne({
@@ -50,12 +52,12 @@ router.get("/:serviceId", async (req, res, next) => {
 });
 router.patch("/:serviceId", async (req, res, next) => {
   //update service
-  const { serviceId } = req.params;
+  const {serviceId} = req.params;
   const providersServicesServices = new ProvidersServicesServices();
   try {
     const result = await providersServicesServices.update({
       serviceId,
-      data      : req.body
+      data: req.body
     });
     res.status(200).json(result);
   } catch (error) {
@@ -64,7 +66,7 @@ router.patch("/:serviceId", async (req, res, next) => {
 });
 router.delete("/:serviceId", async (req, res, next) => {
   //remove service by is id
-  const { serviceId } = req.params;
+  const {serviceId} = req.params;
   const providersServicesServices = new ProvidersServicesServices();
   try {
     const deletedService = await providersServicesServices.remove({

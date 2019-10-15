@@ -1,55 +1,41 @@
 const MariaLib = require("../../lib/mariadb");
-const debug = require("debug")("app:services:providers");
 class ProvidersServices {
   constructor() {
     this.table = "providers";
     this.mariadb = new MariaLib();
   }
-  async getAll({ userId }) {
-    const providers = await this.mariadb.read(
+  getAll({userId}) {
+    return this.mariadb.read(
       this.table,
-      `WHERE user_id = ${userId}`
+      `WHERE user_id = ${userId} AND active=1`
     );
-    return providers;
   }
-  async getOne({ providerId }) {
+  getOne(providerId) {
     const query = `WHERE provider_id = ${providerId}`; // WHERE query;
-    const provider = await this.mariadb.read(this.table, query);
-    return provider;
+    return this.mariadb.read(this.table, query);
   }
-  async update({ providerId, data }) {
-    const { name, lastname, email, phone, imageUrl, about } = data;
-
+  create(provider, userId) {
+    return this.mariadb
+      .create(
+        this.table,
+        "(name, lastname, email, phone, image_url, about, user_id)",
+        [...provider, userId]
+      )
+      .then(({insertId}) => this.getOne(insertId));
+  }
+  update(providerId, data) {
+    const {name, lastname, email, phone, imageUrl, about} = data;
     const setNewData = `name="${name}", lastname="${lastname}", email="${email}", phone=${phone}, image_url="${imageUrl}", about="${about}"`;
     const condition = `provider_id = ${providerId}`;
-
-    const result = await this.mariadb.update(
-      this.table,
-      setNewData,
-      condition
-    );
-    debug(result);
-    if (result.affectedRows != 0) {
-      return { status: true, updatedId: providerId };
-    } else {
-      throw new Error("No se actualizo el provedor. 🤷‍♀️");
-    }
+    return this.mariadb
+      .update(this.table, setNewData, condition)
+      .then(() => this.getOne(providerId));
   }
 
-  async remove({ providerId }) {
+  remove({providerId}) {
     const setNewData = `active = 0`;
     const condition = `provider_id = ${providerId}`;
-
-    const result = await this.mariadb.update(
-      this.table,
-      setNewData,
-      condition
-    );
-    if (result.affectedRows != 0) {
-      return { status: true, removedId: providerId };
-    } else {
-      throw new Error("No se actualizo el provedor. 🤷‍♀️");
-    }
+    return this.mariadb.update(this.table, setNewData, condition);
   }
 }
 module.exports = ProvidersServices;
