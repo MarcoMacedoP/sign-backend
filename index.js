@@ -20,6 +20,7 @@ const providersApiRoute = require("./api/providers/providers");
 const expensesApiRoute = require("./api/providers/expenses");
 const clientsApiRoute = require("./api/clients");
 const remindersApiRoute = require("./api/reminders/reminders");
+const teamsApiRoute = require("./api/teams/teams");
 const testRoute = require("./api/test");
 //---------------------------------------------
 
@@ -76,10 +77,19 @@ app.use("/api/test", testRoute);
 
 app.use(
   "/api/clients",
-  // passport.authenticate("jwt", {session: false}),
+  passport.authenticate("jwt", {session: false}),
   clientsApiRoute
 );
-app.use("/api/reminders", remindersApiRoute);
+app.use(
+  "/api/teams",
+  passport.authenticate("jwt", {session: false}),
+  teamsApiRoute
+);
+app.use(
+  "/api/reminders",
+  passport.authenticate("jwt", {session: false}),
+  remindersApiRoute
+);
 
 //Error handlers----------
 const {
