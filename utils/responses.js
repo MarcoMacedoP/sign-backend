@@ -1,5 +1,7 @@
 function sendBadResponse({response, message, statusCode, data = []}) {
-  response.status(statusCode).json({error: message, data});
+  response
+    .status(statusCode)
+    .json({error: message, data, statusCode});
 }
 function sendGoodResponse({
   response,

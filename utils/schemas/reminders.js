@@ -1,18 +1,29 @@
 const Joi = require("@hapi/joi").extend(require("@hapi/joi-date"));
 
-const reminderTitleSchema = Joi.string().min(4).max(50);
+const reminderTitleSchema = Joi.string()
+  .min(4)
+  .max(50);
 const reminderDescriptionSchema = Joi.string().max(254);
 const reminderDateSchema = Joi.date().format("YYYY-MM-DD");
-const idSchema = Joi.number().integer().min(1);
+const idSchema = Joi.number()
+  .integer()
+  .min(1);
 
 const createReminderSchema = {
-  title       : reminderTitleSchema.required(),
-  description : reminderDescriptionSchema,
-  date        : reminderDateSchema.required(),
-  clientId    : idSchema,
-  providerId  : idSchema
+  title: reminderTitleSchema.required(),
+  description: reminderDescriptionSchema,
+  date: reminderDateSchema.required()
 };
-
+const createReminderNotFromUser = {
+  ...createReminderSchema,
+  typeId: idSchema.required()
+};
+const getAllRemindersSchema = {
+  clientId: idSchema.required(),
+  providerId: idSchema
+};
 module.exports = {
+  createReminderNotFromUser,
+  getAllRemindersSchema,
   createReminderSchema
 };

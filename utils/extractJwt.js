@@ -7,7 +7,7 @@
 const jwt = require("jsonwebtoken");
 
 function extractJwt(req) {
-  const { authorization } = req.headers;
+  const {authorization} = req.headers;
   //Check if header is Bearer token
   if (authorization.startsWith("Bearer ")) {
     const token = authorization.substring(7, authorization.length); //Remove the "Bearer " from string.
@@ -16,5 +16,8 @@ function extractJwt(req) {
     throw new Error("Bad header");
   }
 }
-
-module.exports = { extractJwt };
+function getUserIDFromAccessToken(req) {
+  const decodedJWT = extractJwt(req);
+  return decodedJWT.sub;
+}
+module.exports = {extractJwt, getUserIDFromAccessToken};
