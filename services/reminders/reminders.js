@@ -34,7 +34,10 @@ class RemindersService extends MariaLib {
   }
 
   getAllFromUser(userId) {
-    return this.read(this.tables.main, `WHERE user_id =${userId}`);
+    return this.read(
+      this.tables.main,
+      `WHERE user_id =${userId} AND active=1`
+    );
   }
   /**
    * Gets all reminders using a transition table
@@ -51,6 +54,7 @@ class RemindersService extends MariaLib {
   }) {
     const finalTableIdName = "reminder_id";
     const finalTable = this.tables.main;
+    const aditionalFilters = "AND active=1";
     //make the query
     try {
       const remindersQuery = await makeQueryFromTransitionTable(
@@ -58,7 +62,8 @@ class RemindersService extends MariaLib {
         transitionTableIdName,
         transitionTableIdValue,
         finalTableIdName,
-        finalTable
+        finalTable,
+        aditionalFilters
       );
       return this.query(remindersQuery);
     } catch (error) {
@@ -172,7 +177,7 @@ class RemindersService extends MariaLib {
       this.tables.main,
       set,
       `reminder_id=${reminderId}`
-    );
+    ).then(() => this.getOne(reminderId));
   }
   remove(reminderId) {
     return this.update(

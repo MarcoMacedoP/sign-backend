@@ -13,7 +13,8 @@ async function makeQueryFromTransitionTable(
   transitionTableId,
   transitionTableIdValue,
   finalTableIdName,
-  finalTable
+  finalTable,
+  aditionalFilters = ""
 ) {
   //validation stuff-------------
   if (
@@ -41,7 +42,8 @@ async function makeQueryFromTransitionTable(
     return makeFinalQuery(
       transitionsTableValues,
       finalTable,
-      finalTableIdName
+      finalTableIdName,
+      aditionalFilters
     );
   }
 }
@@ -52,12 +54,13 @@ async function makeQueryFromTransitionTable(
 function makeFinalQuery(
   transitionsTableValues,
   finalTable,
-  finalTableIdName
+  finalTableIdName,
+  aditionalFilters
 ) {
   const finalTableIds = makeIdsForQuery(transitionsTableValues);
   debug("finalTableIds");
   debug(finalTableIds);
-  const finalQuery = `SELECT * FROM ${finalTable} WHERE ${finalTableIdName} IN ${finalTableIds}`;
+  const finalQuery = `SELECT * FROM ${finalTable} WHERE ${finalTableIdName} IN ${finalTableIds} ${aditionalFilters}`;
   return finalQuery;
 }
 

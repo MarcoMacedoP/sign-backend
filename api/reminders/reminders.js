@@ -129,7 +129,7 @@ router.patch("/:reminderId", async (request, response, next) => {
       response,
       message: "get a reminder",
       statusCode: 200,
-      data: reminders
+      data: updatedReminder
     });
   } catch (error) {
     next(error);
@@ -140,15 +140,13 @@ router.delete("/:reminderId", async (request, response, next) => {
   const remindersServices = new RemindersServices();
   const {reminderId} = request.params;
   try {
-    const removedReminder = await remindersServices.remove(
-      reminderId
-    );
+    await remindersServices.remove(reminderId);
     //************* update message response *******************
     sendGoodResponse({
       response,
-      message: "get a reminder",
+      message: `removed reminder with id ${reminderId}`,
       statusCode: 200,
-      data: reminders
+      data: []
     });
   } catch (error) {
     next(error);
