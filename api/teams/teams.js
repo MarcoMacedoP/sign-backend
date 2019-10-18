@@ -1,5 +1,5 @@
 //libs
-const router = require("express").Router();
+const router = require("./teams-user");
 const debug = require("debug")("app:teams:api");
 //services
 const TeamsServices = require("../../services/teams/teams");
