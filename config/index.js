@@ -15,6 +15,7 @@ module.exports = {
     process.env.NODE_ENV !== "production"
       ? `http://localhost:${process.env.SERVER_PORT}`
       : process.env.SERVER_URL,
+  serverStaticFilesUrl: `${this.serverUrl}/static/uploads`,
   //Auth
   authJwtSecret: process.env.AUTH_JWT_SECRET
 };

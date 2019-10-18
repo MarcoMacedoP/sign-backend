@@ -3,10 +3,7 @@ const express = require("express");
 const router = express.Router();
 const debug = require("debug")("app:api:users");
 const fileUpload = require("../utils/middlewares/fileUpload");
-const {
-  sendBadResponse,
-  sendGoodResponse
-} = require("../utils/responses");
+const {sendGoodResponse} = require("../utils/responses");
 const config = require("../config");
 //Services
 const UserServices = require("../services/users");

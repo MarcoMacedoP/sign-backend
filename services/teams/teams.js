@@ -35,5 +35,8 @@ class Teams {
       providers
     });
   }
+  updateOne(teamId, data) {
+    return this.mongodb.updateOneById(teamId, data);
+  }
 }
 module.exports = Teams;
