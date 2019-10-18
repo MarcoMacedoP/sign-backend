@@ -22,5 +22,22 @@ router.get("/", async (req, res, next) => {
     next(error);
   }
 });
+router.get("/:teamId", async (req, res, next) => {
+  const userId = getUserIDFromAccessToken(req);
+  const {teamId} = req.params;
+  const teamsUserServices = new TeamsUserServices();
+
+  try {
+    const team = await teamsUserServices.getOne(userId, teamId);
+    sendGoodResponse({
+      response: res,
+      message: "get one teams",
+      statusCode: 200,
+      data: team
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;
