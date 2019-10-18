@@ -14,7 +14,7 @@ const {sendGoodResponse} = require("../../utils/responses");
 /**
  * Get all the teams that a user haves
  */
-router.get("/", async (req, res, next) => {
+router.get("/user/", async (req, res, next) => {
   const userId = getUserIDFromAccessToken(req);
   const teamsUserServices = new TeamsUserServices();
 
@@ -33,7 +33,7 @@ router.get("/", async (req, res, next) => {
 /**
  * Get one team that a user haves
  */
-router.get("/:teamId", async (req, res, next) => {
+router.get("/user/:teamId", async (req, res, next) => {
   const userId = getUserIDFromAccessToken(req);
   const {teamId} = req.params;
   const teamsUserServices = new TeamsUserServices();
@@ -53,7 +53,7 @@ router.get("/:teamId", async (req, res, next) => {
 /**
  * Update one team that a user haves
  */
-router.put("/:teamId", async (req, res, next) => {
+router.put("/user/:teamId", async (req, res, next) => {
   const userId = getUserIDFromAccessToken(req);
   const {teamId} = req.params;
   const teamsUserServices = new TeamsUserServices();
@@ -77,7 +77,7 @@ router.put("/:teamId", async (req, res, next) => {
 /**
  * Detele one team that a user haves
  */
-router.delete("/:teamId", async (req, res, next) => {
+router.delete("/user/:teamId", async (req, res, next) => {
   const userId = getUserIDFromAccessToken(req);
   const {teamId} = req.params;
   const teamsUserServices = new TeamsUserServices();
@@ -98,7 +98,7 @@ router.delete("/:teamId", async (req, res, next) => {
  * Add a user to the team that a user haves
  */
 router.patch(
-  "/add_user/:teamId",
+  "/user/add_user/:teamId",
   validate(addUserSchema),
   async (req, res, next) => {
     const userId = getUserIDFromAccessToken(req);
@@ -123,7 +123,7 @@ router.patch(
 );
 
 router.patch(
-  "/remove_user/:teamId",
+  "/user/remove_user/:teamId",
   validate(removeUserSchema),
   async (req, res, next) => {
     const userId = getUserIDFromAccessToken(req);
