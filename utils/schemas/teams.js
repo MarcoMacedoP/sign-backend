@@ -9,6 +9,13 @@ const createTeamSchema = {
     .max(100),
   projects: Joi.array(),
   clients: Joi.array(),
-  providers: Joi.array()
+  providers: Joi.array(),
+  users: Joi.array()
 };
-module.exports = {createTeamSchema};
+const addUserSchema = {
+  id: Joi.number().required()
+};
+const removeUserSchema = {
+  removedUser: Joi.number().required()
+};
+module.exports = {createTeamSchema, addUserSchema, removeUserSchema};
