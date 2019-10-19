@@ -1,7 +1,6 @@
 //Modules
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require("cors");
 const passport = require("passport");
 
 //Config
@@ -21,6 +20,7 @@ const expensesApiRoute = require("./api/providers/expenses");
 const clientsApiRoute = require("./api/clients");
 const remindersApiRoute = require("./api/reminders/reminders");
 const teamsApiRoute = require("./api/teams/teams");
+const userProjectsApiRoute = require("./api/projects/user-projects");
 const testRoute = require("./api/test");
 //---------------------------------------------
 
@@ -89,6 +89,11 @@ app.use(
   "/api/reminders",
   passport.authenticate("jwt", {session: false}),
   remindersApiRoute
+);
+app.use(
+  "/api/projects",
+  passport.authenticate("jwt", {session: false}),
+  userProjectsApiRoute
 );
 
 //Error handlers----------
