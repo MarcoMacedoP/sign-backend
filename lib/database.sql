@@ -15,26 +15,6 @@ CREATE TABLE IF NOT EXISTS providers(
         ON UPDATE CURRENT_TIMESTAMP
 ) CHARACTER SET utf8 COLLATE utf8_spanish_ci;
 
-CREATE TABLE IF NOT EXISTS incomes(
-    incomeId INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `name` VARCHAR 50 NOT NULL, 
-    
-)CHARACTER SET utf8 COLLATE utf8_spanish_ci;
-
-
-
-CREATE TABLE IF NOT EXISTS services(
-    service_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR (50) NOT NULL,
-    description TEXT,
-    cost FLOAT NOT NULL,
-    cost_per_hour BOOL DEFAULT FALSE,
-    active BOOL NOT NULL DEFAULT TRUE,
-    provider_id INTEGER NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
-)CHARACTER SET utf8 COLLATE utf8_spanish_ci;
-
 CREATE TABLE IF NOT EXISTS products(
     product_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR (50) NOT NULL,
@@ -99,6 +79,6 @@ CREATE TABLE IF NOT EXISTS reminders_providers(
     provider_id INTEGER NOT NULL,
     reminder_id INTEGER NOT NULL
 )CHARACTER SET utf8 COLLATE utf8_spanish_ci;
-
++
 
 INSERT INTO reminders (title, description, date) VALUES ("TITULO", "DESCRIPCION", '1970-01-02');
