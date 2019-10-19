@@ -5,6 +5,7 @@ const ProjectActivitiesServices = require("../../services/projects/project-activ
 const validate = require("../../utils/middlewares/validationHandler");
 const {
   createActivitieSchema,
+  changeStatusSchema,
   projectIdSchema
 } = require("../../utils/schemas/projects/activities-projects");
 //utils
@@ -27,6 +28,27 @@ router.post(
         message: "added activitie to project!",
         statusCode: 201,
         data: projectWithAddedActivite
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+//change the status of an activitie
+router.patch(
+  "/change_status/",
+  validate(changeStatusSchema),
+  async (req, res, next) => {
+    const projectActivitiesServices = new ProjectActivitiesServices();
+    try {
+      const activitie = await projectActivitiesServices.changeStatus(
+        req.body
+      );
+      sendGoodResponse({
+        response: res,
+        message: "changed activitie status to project!",
+        statusCode: 201,
+        data: activitie
       });
     } catch (error) {
       next(error);

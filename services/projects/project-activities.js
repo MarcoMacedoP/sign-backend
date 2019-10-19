@@ -29,13 +29,22 @@ class ProjectActivities {
       )
     );
   }
-  async updateOne(projectId, actitivieId, newActiviteData) {
+  /**Update an activitie inside a project.
+   * first, search the activitie id on the project activities
+   * usign the projectId, once it find it's update the info.
+   *
+   * @param {*} projectId  the _id to be searched on projects
+   * @param {*} activitieId  the activitie _id to be searched in projects
+   * @param {*} newActiviteData the new data to be added to activitie
+   */
+  async updateOne(projectId, activitieId, newActiviteData) {
     const {activities} = await this.projectsServices.getOneById(
       projectId
     );
-    const activitieIndex = activities.findIndex(
-      activitie => activitie._id === actitivieId
+    const activitieIndex = activities.findIndex(activitie =>
+      activitie._id.equals(activitieId)
     );
+
     if (activitieIndex === -1) {
       throw this.errors.activitieNotFound;
     } else {
@@ -43,8 +52,8 @@ class ProjectActivities {
         ...activities[activitieIndex],
         ...newActiviteData
       };
-      const updatedActivities = activities.filter(
-        activitie => activitie._id !== actitivieId
+      const updatedActivities = activities.filter(activitie =>
+        activitie._id.equals(activitieId)
       );
       return this.projectsServices.updateOne(
         {_id: new ObjectId(projectId)},
@@ -52,8 +61,13 @@ class ProjectActivities {
       );
     }
   }
-  changeStatus(projectId, actitivieId, status) {
-    return this.updateOne(projectId, actitivieId, {status});
+  /**Changes the status of the activitie.
+   * @param {*} projectId  the _id to be searched on projects
+   * @param {*} activitieId  the activitie _id to be searched in projects
+   * @param {*} status the new status to be changed
+   */
+  changeStatus({projectId, activitieId, status}) {
+    return this.updateOne(projectId, activitieId, {status});
   }
 }
 module.exports = ProjectActivities;
