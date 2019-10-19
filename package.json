@@ -36,6 +36,7 @@
     "rand-token": "^0.4.0"
   },
   "devDependencies": {
+    "eslint": "^6.5.1",
     "nodemon": "^1.19.2"
   }
 }
