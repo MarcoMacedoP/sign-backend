@@ -39,6 +39,8 @@ router.get("/:providerId", async (req, res, next) => {
     next(error);
   }
 });
+
+//create a provider without a picture
 router.post("/", async (req, res, next) => {
   try {
     const {sub: userId} = extractJwt(req);

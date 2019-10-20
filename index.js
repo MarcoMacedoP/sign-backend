@@ -16,6 +16,7 @@ app.listen(port, () => {
 const authApiRoute = require("./api/auth");
 const usersApiRoute = require("./api/users");
 const providersApiRoute = require("./api/providers/providers");
+const userProvidersApiRoute = require("./api/providers/user-providers");
 const expensesApiRoute = require("./api/providers/expenses");
 const clientsApiRoute = require("./api/clients");
 const remindersApiRoute = require("./api/reminders/reminders");
@@ -59,11 +60,19 @@ require("./utils/auth/strategies/jwt");
 //Route Middlewares
 app.use("/api/auth", authApiRoute);
 
+//----provider routes---------
 app.use(
   "/api/providers",
   passport.authenticate("jwt", {session: false}),
   providersApiRoute
 );
+app.use(
+  "/api/providers/user",
+  passport.authenticate("jwt", {session: false}),
+  userProvidersApiRoute
+);
+//----provider routes---------
+
 app.use(
   "/api/expenses",
   passport.authenticate("jwt", {session: false}),

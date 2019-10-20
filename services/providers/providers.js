@@ -42,6 +42,14 @@ class ProvidersServices {
       .then(() => this.getOne(providerId));
   }
 
+  updatePictureUrl(pictureUrl, providerId) {
+    return this.mariadb.update(
+      this.table,
+      `image_url = ${pictureUrl}`,
+      `provider_id = ${providerId}`
+    );
+  }
+
   remove({providerId}) {
     const setNewData = `active = 0`;
     const condition = `provider_id = ${providerId}`;
