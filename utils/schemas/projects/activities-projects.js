@@ -1,4 +1,4 @@
-const Joi = require("@hapi/joi");
+const Joi = require("@hapi/joi").extend(require("@hapi/joi-date"));
 const {mongoIdSchema} = require("../global");
 const statusSchema = Joi.valid(
   "PENDING",
@@ -13,6 +13,7 @@ const createActivitieSchema = {
     .required(),
   description: Joi.string().max(200),
   status: statusSchema,
+  date: Joi.date(),
   comments: Joi.array()
 };
 const changeStatusSchema = {

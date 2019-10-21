@@ -1,5 +1,6 @@
 const {ObjectId} = require("mongodb");
 const ProjectsServices = require("./projects");
+const debug = require("debug")("app:services:project-activities");
 const Boom = require("@hapi/boom");
 class ProjectActivities {
   constructor() {
@@ -17,17 +18,22 @@ class ProjectActivities {
    * @param {*} activitieData the data of the actitivie
    */
   createOne(projectId, activitieData) {
-    return this.projectsServices.getOneById(projectId).then(project =>
-      this.projectsServices.updateOne(
-        {_id: new ObjectId(projectId)},
-        {
-          activities: [
-            ...project.activities,
-            {_id: new ObjectId(), ...activitieData}
-          ]
-        }
-      )
-    );
+    return this.projectsServices
+      .getOneById(projectId)
+      .then(project => {
+        debug(project);
+        return this.projectsServices.updateOne(
+          {_id: new ObjectId(projectId)},
+          {
+            activities: project.activities
+              ? [
+                  ...project.activities,
+                  {_id: new ObjectId(), ...activitieData}
+                ]
+              : [{_id: new ObjectId(), ...activitieData}]
+          }
+        );
+      });
   }
   /**Update an activitie inside a project.
    * first, search the activitie id on the project activities
