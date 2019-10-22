@@ -58,12 +58,13 @@ class ProjectActivities {
         ...activities[activitieIndex],
         ...newActiviteData
       };
-      const updatedActivities = activities.filter(activitie =>
-        activitie._id.equals(activitieId)
+      const reducedActivities = activities.filter(
+        activitie => !activitie._id.equals(activitieId)
       );
+      debug(reducedActivities);
       return this.projectsServices.updateOne(
         {_id: new ObjectId(projectId)},
-        {activities: [...updatedActivities, updatedActivite]}
+        {activities: [...reducedActivities, updatedActivite]}
       );
     }
   }
