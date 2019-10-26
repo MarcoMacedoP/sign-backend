@@ -167,8 +167,13 @@ class RemindersService extends MariaLib {
       rows = "(title, date, user_id)";
       values = [title, date, userId];
     }
-    return this.create(this.tables.main, rows, values).then(
-      ({insertId}) => this.getOne(insertId)
+    return (
+      this.create(this.tables.main, rows, values)
+        .then(({insertId}) => this.getOne(insertId))
+        //add status to reminder, it needs an array of reminders
+        .then(reminder => this.addStatusToReminders([reminder]))
+        //finally return just one element.
+        .then(arrayOfOneReminder => arrayOfOneReminder[0])
     );
   }
 
@@ -208,26 +213,26 @@ class RemindersService extends MariaLib {
       const daysToConclude = compareDateToTodayInDays(
         new Date(reminder.date)
       );
-
+      debug(reminder.title, daysToConclude);
       if (daysToConclude > 10) {
         return {
           ...reminder,
           status: REMINDER_STATUS.OK
         };
       }
-      if (daysToConclude < 10 && daysToConclude > 2) {
+      if (daysToConclude < 10 && daysToConclude >= 2) {
         return {
           ...reminder,
           status: REMINDER_STATUS.WARNING
         };
       }
-      if (daysToConclude < 2 && daysToConclude >= -1) {
+      if (daysToConclude < 2 && daysToConclude >= 0) {
         return {
           ...reminder,
           status: REMINDER_STATUS.DANGER
         };
       }
-      if (daysToConclude < -1) {
+      if (daysToConclude < 0) {
         return {
           ...reminder,
           status: REMINDER_STATUS.ARCHIVED

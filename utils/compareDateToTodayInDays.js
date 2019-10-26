@@ -8,6 +8,6 @@ const A_DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
 function compareDateToTodayInDays(date) {
   const today = new Date();
   const diffOnMillis = date - today;
-  return Math.floor(diffOnMillis / A_DAY_IN_MILLISECONDS);
+  return Math.floor(diffOnMillis / A_DAY_IN_MILLISECONDS) + 1;
 }
 module.exports = compareDateToTodayInDays;
