@@ -2,8 +2,8 @@ const MariaLib = require("../../lib/mariadb");
 const debug = require("debug")("app:reminder-services");
 const Boom = require("@hapi/boom");
 //functions
+const compareDateToTodayInDays = require("../../utils/compareDateToTodayInDays");
 const makeQueryFromTransitionTable = require("../../utils/makeQueryFromTransitionTable");
-
 //the class
 class RemindersService extends MariaLib {
   constructor() {
@@ -21,6 +21,12 @@ class RemindersService extends MariaLib {
       PROJECTS: "PROJECTS",
       TEAMS: "TEAMS"
     };
+    this.REMINDER_STATUS = {
+      OK: "OK",
+      WARNING: "WARNING",
+      DANGER: "DANGER",
+      ARCHIVED: "ARCHIVED"
+    };
     this.incorrectType = searchedType =>
       Boom.notFound(
         `searchedType: ${searchedType} is not a valid type!`
@@ -37,7 +43,7 @@ class RemindersService extends MariaLib {
     return this.read(
       this.tables.main,
       `WHERE user_id =${userId} AND active=1`
-    );
+    ).then(remindersList => this.addStatusToReminders(remindersList));
   }
   /**
    * Gets all reminders using a transition table
@@ -185,6 +191,49 @@ class RemindersService extends MariaLib {
       `active = 0`,
       `reminder_id=${reminderId}`
     );
+  }
+  /**Adds status to a reminder list based on his date.
+   *
+   * @param {*} remindersList
+   */
+  addStatusToReminders(remindersList) {
+    const REMINDER_STATUS = {
+      OK: "OK",
+      WARNING: "WARNING",
+      DANGER: "DANGER",
+      ARCHIVED: "ARCHIVED"
+    };
+
+    return remindersList.map(reminder => {
+      const daysToConclude = compareDateToTodayInDays(
+        new Date(reminder.date)
+      );
+
+      if (daysToConclude > 10) {
+        return {
+          ...reminder,
+          status: REMINDER_STATUS.OK
+        };
+      }
+      if (daysToConclude < 10 && daysToConclude > 2) {
+        return {
+          ...reminder,
+          status: REMINDER_STATUS.WARNING
+        };
+      }
+      if (daysToConclude < 2 && daysToConclude >= -1) {
+        return {
+          ...reminder,
+          status: REMINDER_STATUS.DANGER
+        };
+      }
+      if (daysToConclude < -1) {
+        return {
+          ...reminder,
+          status: REMINDER_STATUS.ARCHIVED
+        };
+      }
+    });
   }
 }
 module.exports = RemindersService;
