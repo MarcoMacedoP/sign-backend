@@ -12,7 +12,10 @@ class ClientsServices extends MariaLib {
     );
   }
   getOne(clientId) {
-    return this.read(this.table, `WHERE client_id = ${clientId}`);
+    return this.read(
+      this.table,
+      `WHERE client_id = ${clientId}`
+    ).then(clients => clients[0]);
   }
   createOne({userId, name, lastname, email, phone}) {
     let rows = "(name, lastname, email, phone, user_id)";

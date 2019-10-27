@@ -1,4 +1,5 @@
 const MariaLib = require("../../lib/mariadb");
+const debug = require("debug")("app:providers-services");
 //services
 const ExpensesServices = require("./expenses");
 class ProvidersServices {
@@ -12,11 +13,13 @@ class ProvidersServices {
       .read(this.table, `WHERE user_id = ${userId} AND active=1`)
       .then(providers =>
         Promise.all(
-          providers.map(provider =>
-            this.expenses
+          providers.map(provider => {
+            debug(provider);
+
+            return this.expenses
               .getAll(provider.provider_id)
-              .then(expenses => ({...provider, expenses}))
-          )
+              .then(expenses => ({...provider, expenses}));
+          })
         )
       );
   }
@@ -28,7 +31,7 @@ class ProvidersServices {
     return this.mariadb
       .create(
         this.table,
-        "(name, lastname, email, phone, image_url, about, user_id)",
+        "(name, lastname, email, phone, about, user_id)",
         [...provider, userId]
       )
       .then(({insertId}) => this.getOne(insertId));

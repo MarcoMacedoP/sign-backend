@@ -15,7 +15,7 @@ class Expenses {
     this.mongodb = new MongoLib("incomes");
   }
   getAll(providerId) {
-    return this.mongodb.readAll(providerId);
+    return this.mongodb.readAll({providerId});
   }
   getOneById(expenseId) {
     return this.mongodb.readById(expenseId);
