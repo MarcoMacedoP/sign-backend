@@ -23,7 +23,7 @@ router.get("/:providerId", async (req, res, next) => {
       data: expenses
     });
   } catch (error) {
-    next(erorr);
+    next(error);
   }
 });
 router.post("/", async (req, res, next) => {

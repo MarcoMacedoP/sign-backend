@@ -22,5 +22,11 @@ class UserProjects {
       newProjectData
     );
   }
+  removeOne(projectId, userId) {
+    return this.projectsServices.removeOne({
+      _id: new ObjectId(projectId),
+      userId
+    });
+  }
 }
 module.exports = UserProjects;

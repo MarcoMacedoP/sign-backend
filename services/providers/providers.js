@@ -13,13 +13,11 @@ class ProvidersServices {
       .read(this.table, `WHERE user_id = ${userId} AND active=1`)
       .then(providers =>
         Promise.all(
-          providers.map(provider => {
-            debug(provider);
-
-            return this.expenses
+          providers.map(provider =>
+            this.expenses
               .getAll(provider.provider_id)
-              .then(expenses => ({...provider, expenses}));
-          })
+              .then(expenses => ({...provider, expenses}))
+          )
         )
       );
   }

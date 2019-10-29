@@ -48,4 +48,45 @@ router.post(
     }
   }
 );
+//update a project for a user
+router.put(
+  "/user/:projectId",
+  validate(createProjectSchema),
+  async (req, res, next) => {
+    const userProjectsServices = new UserProjectsServices();
+    const userId = getUserIDFromAccessToken(req);
+    const {projectId} = req.params;
+    try {
+      const updatedProject = await userProjectsServices.updateOne(
+        projectId,
+        userId,
+        req.body
+      );
+      sendGoodResponse({
+        response: res,
+        message: "updated a project!",
+        statusCode: 201,
+        data: updatedProject
+      });
+    } catch (error) {
+      next();
+    }
+  }
+);
+//remove a project for a user
+router.delete("/user/:projectId", async (req, res, next) => {
+  const userProjectsServices = new UserProjectsServices();
+  const userId = getUserIDFromAccessToken(req);
+  const {projectId} = req.params;
+  try {
+    await userProjectsServices.removeOne(projectId, userId);
+    sendGoodResponse({
+      response: res,
+      message: "removed a project!",
+      statusCode: 201
+    });
+  } catch (error) {
+    next();
+  }
+});
 module.exports = router;

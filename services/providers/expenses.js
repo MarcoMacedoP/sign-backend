@@ -1,4 +1,3 @@
-const debug = require("debug")("app:services:services");
 const MongoLib = require("../../lib/mongodb");
 
 /*
