@@ -1,4 +1,4 @@
-const MariaLib = require("../lib/mariadb");
+const MariaLib = require("../../lib/mariadb");
 
 class ClientsServices extends MariaLib {
   constructor() {

@@ -15,6 +15,9 @@ class Projects {
   updateOne(filter = {}, newData = {}) {
     return this.mongodb.updateOne(filter, newData);
   }
+  updateOneById(projectId, newData) {
+    return this.mongodb.updateOneById(projectId, newData);
+  }
   removeOne(filter = {}) {
     return this.mongodb.removeOne(filter);
   }

@@ -79,6 +79,6 @@ CREATE TABLE IF NOT EXISTS reminders_providers(
     provider_id INTEGER NOT NULL,
     reminder_id INTEGER NOT NULL
 )CHARACTER SET utf8 COLLATE utf8_spanish_ci;
-+
+
 
 INSERT INTO reminders (title, description, date) VALUES ("TITULO", "DESCRIPCION", '1970-01-02');

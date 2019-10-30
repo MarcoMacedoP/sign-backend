@@ -10,13 +10,10 @@ const debug = require("debug")("app:clientsApi");
 const {sendGoodResponse} = require("../utils/responses");
 //Resources
 const {extractJwt} = require("../utils/extractJwt");
-const ClientsServices = require("../services/clients");
+const ClientsServices = require("../services/clients/clients");
 //Validation stuff
 const validate = require("../utils/middlewares/validationHandler");
-const {
-  createClientSchema,
-  clientIdSchema
-} = require("../utils/schemas/clients");
+const {createClientSchema} = require("../utils/schemas/clients");
 
 //**********Routes************
 
