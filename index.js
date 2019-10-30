@@ -23,7 +23,7 @@ const remindersApiRoute = require("./api/reminders/reminders");
 const teamsApiRoute = require("./api/teams/teams");
 const userProjectsApiRoute = require("./api/projects/user-projects");
 const activitiesProjectsApiRoute = require("./api/projects/activities-projects");
-
+const clientsProjectsApiRoute = require("./api/projects/clients-projects");
 const testRoute = require("./api/test");
 //---------------------------------------------
 
@@ -112,7 +112,11 @@ app.use(
   passport.authenticate("jwt", {session: false}),
   activitiesProjectsApiRoute
 );
-
+app.use(
+  "/api/projects/clients",
+  passport.authenticate("jwt", {session: false}),
+  clientsProjectsApiRoute
+);
 //Error handlers----------
 const {
   logErrors,
