@@ -19,7 +19,6 @@ router.get("/:userId", async (req, res, next) => {
       message: "getted user",
       data: user
     });
-    res.status(200).json(user);
   } catch (error) {
     next(error);
   }
