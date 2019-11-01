@@ -3,6 +3,9 @@ const signToken = require("./signToken");
 const RefreshToken = require("../../services/refreshToken");
 const {sendGoodResponse} = require("../responses");
 const Boom = require("@hapi/boom");
+//in case of well auth user also return the notifications that the user haves.
+const UserNotificationsServices = require("../../services/notifications/user-notifications");
+
 require("./strategies/basic");
 
 function authenticateUser(req, res, next) {
@@ -27,7 +30,10 @@ function authenticateUser(req, res, next) {
               user.user_id,
               user.email
             );
-
+            const userNotificationsServices = new UserNotificationsServices(
+              user.user_id
+            );
+            const userNotifications = await userNotificationsServices.getAll();
             sendGoodResponse({
               response: res,
               message: "good auth",
@@ -43,7 +49,8 @@ function authenticateUser(req, res, next) {
                   profilePic: user.profile_pic_url,
                   bio: user.biography,
                   job: user.job_title
-                }
+                },
+                userNotifications: userNotifications
               }
             });
           }
