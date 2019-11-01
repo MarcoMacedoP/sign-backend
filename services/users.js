@@ -2,6 +2,7 @@ const MariaLib = require("../lib/mariadb");
 const bcrypt = require("bcrypt");
 const debug = require("debug")("app:services:users");
 const Boom = require("@hapi/boom");
+const UserNotificationsService = require("../services/notifications/user-notifications");
 
 class UsersServices {
   constructor() {
@@ -26,6 +27,17 @@ class UsersServices {
         lastname,
         hashedPassword
       ])
+      .then(async ({insertId}) => {
+        //create a welcome notification
+        const userNotificationsServices = new UserNotificationsService(
+          insertId
+        );
+        await userNotificationsServices.insertOne({
+          title: "Bienvenido a SIGN",
+          description: "Es un placer tenerte aquí."
+        });
+        return {insertId};
+      })
       .then(({insertId}) =>
         this.mariadb.read(
           this.table,
