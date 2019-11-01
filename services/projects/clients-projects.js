@@ -6,7 +6,7 @@ class ClientsProjects {
     this.projectId = projectId;
   }
   /**Add a client into a project using their clientId.
-   * @param {*} clientId
+   * @param {*} clientId the cliend id.
    */
   addClient(clientId) {
     return this.projects
@@ -17,6 +17,9 @@ class ClientsProjects {
         })
       );
   }
+  /**Add a client into a project using their clientId.
+   * @param {*} clientId the cliend id.
+   */
   removeClient(clientId) {
     return this.projects
       .getOneById(this.projectId)
