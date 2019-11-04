@@ -24,6 +24,8 @@ const teamsApiRoute = require("./api/teams/teams");
 const userProjectsApiRoute = require("./api/projects/user-projects");
 const activitiesProjectsApiRoute = require("./api/projects/activities-projects");
 const clientsProjectsApiRoute = require("./api/projects/clients-projects");
+const providersProjectsApiRoute = require("./api/projects/providers-projects");
+
 const userNotificationsRoute = require("./api/notifications/user-notifications");
 //---------------------------------------------
 
@@ -115,6 +117,11 @@ app.use(
   "/api/projects/clients",
   passport.authenticate("jwt", {session: false}),
   clientsProjectsApiRoute
+);
+app.use(
+  "/api/projects/providers",
+  passport.authenticate("jwt", {session: false}),
+  providersProjectsApiRoute
 );
 //Notifications routes
 app.use(
