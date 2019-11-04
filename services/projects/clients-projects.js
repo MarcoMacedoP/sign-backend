@@ -1,6 +1,7 @@
 const ProjectServices = require("./projects");
 const ClientsServices = require("../clients/clients");
 const Boom = require("@hapi/boom");
+const validate = require("../../utils/validations");
 // const debug = require("debug")("app:services:clients-projects");
 class ClientsProjects {
   constructor(projectId) {
@@ -34,7 +35,7 @@ class ClientsProjects {
         throw Boom.badRequest("Client is already added", client);
       })
       .catch(error => {
-        if (Boom.isBoom(error) && error.output.statusCode === 404) {
+        if (validate.errorIs404(error)) {
           return this.projects
             .getOneById(this.projectId)
             .then(({clients = []}) =>
@@ -42,7 +43,7 @@ class ClientsProjects {
                 clients: [{clientId}, ...clients]
               })
             );
-        } else throw error;
+        }
       });
   }
 

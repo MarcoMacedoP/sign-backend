@@ -1,5 +1,6 @@
 const MongoLib = require("../../lib/mongodb");
 const ClientsServices = require("../clients/clients");
+const ProviderServices = require("../providers/providers");
 class Projects {
   constructor() {
     this.mongodb = new MongoLib("projects");
@@ -7,17 +8,28 @@ class Projects {
   //Gets a project with all the project info.
   getProjectWithFullInfo(query = {}) {
     return this.getOneWithCustumQuery(query).then(async project => {
+      //instance all services
       const clientServices = new ClientsServices();
+      const providerServices = new ProviderServices();
       //convert the object into an array with just the values
       const clientsIds = project.clients.map(
         ({clientId}) => clientId
       );
+      const providerIds = project.providers.map(
+        ({providerId}) => providerId
+      );
+
       const clientsInProject = await clientServices.getMany(
         clientsIds
       );
+      const providersInProject = await providerServices.getMany(
+        providerIds
+      );
+
       return {
         ...project,
-        clients: clientsInProject
+        clients: clientsInProject,
+        providers: providersInProject
       };
     });
   }

@@ -1,5 +1,4 @@
 const MariaLib = require("../../lib/mariadb");
-const debug = require("debug")("app:providers-services");
 //services
 const ExpensesServices = require("./expenses");
 class ProvidersServices {
@@ -20,6 +19,12 @@ class ProvidersServices {
           )
         )
       );
+  }
+  getMany(providerIds) {
+    const whereCondition = `WHERE provider_id ${this.createMultipleCondition(
+      providerIds
+    )}`;
+    return this.mariadb.read(this.table, whereCondition);
   }
   getOne(providerId) {
     const query = `WHERE provider_id = ${providerId}`; // WHERE query;
