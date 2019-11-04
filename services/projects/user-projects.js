@@ -10,6 +10,12 @@ class UserProjects {
     this.table = "user_projects";
     this.projectsServices = new Projects();
   }
+  getOneWithFullInfo(projectId, userId) {
+    return this.projectsServices.getProjectWithFullInfo({
+      userId,
+      _id: new ObjectId(projectId)
+    });
+  }
   getAll(userId) {
     return this.projectsServices.getAll({userId});
   }

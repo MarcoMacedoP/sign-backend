@@ -5,6 +5,12 @@ class ClientsServices extends MariaLib {
     super();
     this.table = "clients";
   }
+  getMany(clientsIds = []) {
+    const whereCondition = `WHERE client_id ${this.createMultipleCondition(
+      clientsIds
+    )}`;
+    return this.read(this.table, whereCondition);
+  }
   getAll(userId) {
     return this.read(
       this.table,

@@ -1,15 +1,17 @@
 const router = require("express").Router();
+const debug = require("debug")("app:api:projects-clients");
 const ClientsProjectsServices = require("../../services/projects/clients-projects");
 //utils
 const {sendGoodResponse} = require("../../utils/responses");
 
 router.post("/", async (req, res, next) => {
   const {projectId, clientId} = req.body;
+  debug(projectId, clientId);
   const clientsProjectsServices = new ClientsProjectsServices(
     projectId
   );
   try {
-    const updatedProject = clientsProjectsServices.addClient(
+    const updatedProject = await clientsProjectsServices.addClient(
       clientId
     );
     sendGoodResponse({
@@ -28,7 +30,7 @@ router.delete("/", async (req, res, next) => {
     projectId
   );
   try {
-    const updatedProject = clientsProjectsServices.removeClient(
+    const updatedProject = await clientsProjectsServices.removeClient(
       clientId
     );
     sendGoodResponse({

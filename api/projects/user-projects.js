@@ -25,6 +25,27 @@ router.get("/user/", async (req, res, next) => {
     next(error);
   }
 });
+//get one projects that a user haves with the full information of the project
+router.get("/user/:projectId", async (req, res, next) => {
+  const userProjectsServices = new UserProjectsServices();
+  const userId = getUserIDFromAccessToken(req);
+  const {projectId} = req.params;
+
+  try {
+    const projects = await userProjectsServices.getOneWithFullInfo(
+      projectId,
+      userId
+    );
+    sendGoodResponse({
+      response: res,
+      message: "get one user project!",
+      statusCode: 200,
+      data: projects
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 //create a project for a user
 router.post(
   "/user/",
