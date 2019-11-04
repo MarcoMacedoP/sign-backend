@@ -1,10 +1,12 @@
 const ProjectServices = require("./projects");
+const ProviderServices = require("../providers/providers");
+
 const Boom = require("@hapi/boom");
 
 class ProvidersProjectsServices {
   constructor(projectId) {
     this.projects = new ProjectServices();
-    this.clients = new ClientsServices();
+    this.clients = new ProviderServices();
     this.projectId = projectId;
   }
   addProvider(providerId) {
