@@ -21,7 +21,7 @@ class ProvidersServices {
       );
   }
   getMany(providerIds) {
-    const whereCondition = `WHERE provider_id ${this.createMultipleCondition(
+    const whereCondition = `WHERE provider_id ${this.mariadb.createMultipleCondition(
       providerIds
     )}`;
     return this.mariadb.read(this.table, whereCondition);

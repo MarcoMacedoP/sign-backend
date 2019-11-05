@@ -27,7 +27,7 @@ class ProvidersProjectsServices {
       .then(({providers}) => {
         if (this.providerIsInProject(providerId, providers)) {
           const filteredProviders = providers.filter(
-            provider => provider.projectId !== this.projectId
+            provider => provider.providerId !== providerId
           );
           return this.projects.updateOneById(this.projectId, {
             providers: filteredProviders
