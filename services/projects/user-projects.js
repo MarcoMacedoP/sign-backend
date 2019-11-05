@@ -5,33 +5,37 @@ const Projects = require("./projects");
 
 //class
 class UserProjects {
-  constructor() {
+  constructor(userId) {
     this.mongodb = new MongoLib("projects");
     this.table = "user_projects";
     this.projectsServices = new Projects();
+    this.userId = userId;
   }
-  getOneWithFullInfo(projectId, userId) {
+  getOneWithFullInfo(projectId) {
     return this.projectsServices.getProjectWithFullInfo({
-      userId,
+      userId: this.userId,
       _id: new ObjectId(projectId)
     });
   }
-  getAll(userId) {
-    return this.projectsServices.getAll({userId});
+  getAll() {
+    return this.projectsServices.getAll({userId: this.userId});
   }
-  createOne(userId, projectData = {}) {
-    return this.projectsServices.createOne({userId, ...projectData});
+  createOne(projectData = {}) {
+    return this.projectsServices.createOne({
+      userId: this.userId,
+      ...projectData
+    });
   }
-  updateOne(projectId, userId, newProjectData = {}) {
+  updateOne(projectId, newProjectData = {}) {
     return this.projectsServices.updateOne(
-      {userId, _id: new ObjectId(projectId)},
+      {userId: this.userId, _id: new ObjectId(projectId)},
       newProjectData
     );
   }
-  removeOne(projectId, userId) {
+  removeOne(projectId) {
     return this.projectsServices.removeOne({
       _id: new ObjectId(projectId),
-      userId
+      userId: this.userId
     });
   }
 }

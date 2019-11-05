@@ -10,8 +10,8 @@ const {
 } = require("../../utils/schemas/projects/user-projects");
 //get all projects that a user haves
 router.get("/user/", async (req, res, next) => {
-  const userProjectsServices = new UserProjectsServices();
   const userId = getUserIDFromAccessToken(req);
+  const userProjectsServices = new UserProjectsServices(userId);
 
   try {
     const projects = await userProjectsServices.getAll(userId);
@@ -27,8 +27,8 @@ router.get("/user/", async (req, res, next) => {
 });
 //get one projects that a user haves with the full information of the project
 router.get("/user/:projectId", async (req, res, next) => {
-  const userProjectsServices = new UserProjectsServices();
   const userId = getUserIDFromAccessToken(req);
+  const userProjectsServices = new UserProjectsServices(userId);
   const {projectId} = req.params;
 
   try {
@@ -51,8 +51,8 @@ router.post(
   "/user/",
   validate(createProjectSchema),
   async (req, res, next) => {
-    const userProjectsServices = new UserProjectsServices();
     const userId = getUserIDFromAccessToken(req);
+    const userProjectsServices = new UserProjectsServices(userId);
     try {
       const project = await userProjectsServices.createOne(
         userId,
@@ -74,8 +74,8 @@ router.put(
   "/user/:projectId",
   validate(createProjectSchema),
   async (req, res, next) => {
-    const userProjectsServices = new UserProjectsServices();
     const userId = getUserIDFromAccessToken(req);
+    const userProjectsServices = new UserProjectsServices(userId);
     const {projectId} = req.params;
     try {
       const updatedProject = await userProjectsServices.updateOne(
@@ -96,8 +96,8 @@ router.put(
 );
 //remove a project for a user
 router.delete("/user/:projectId", async (req, res, next) => {
-  const userProjectsServices = new UserProjectsServices();
   const userId = getUserIDFromAccessToken(req);
+  const userProjectsServices = new UserProjectsServices(userId);
   const {projectId} = req.params;
   try {
     await userProjectsServices.removeOne(projectId, userId);
