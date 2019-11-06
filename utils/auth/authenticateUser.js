@@ -20,7 +20,7 @@ function authenticateUser(req, res, next) {
         req.logIn(user, {session: false}, async error => {
           if (error) {
             next(Boom.unauthorized());
-          } else {
+          } else if (user) {
             const accessToken = signToken({
               sub: user.user_id,
               email: user.email

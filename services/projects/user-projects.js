@@ -18,7 +18,14 @@ class UserProjects {
     });
   }
   getAll() {
-    return this.projectsServices.getAll({userId: this.userId});
+    return this.projectsServices
+      .getAll({userId: this.userId})
+      .then((projects = []) => {
+        const projectsPromises = projects.map(project =>
+          this.getOneWithFullInfo(project._id)
+        );
+        return Promise.all(projectsPromises);
+      });
   }
   createOne(projectData = {}) {
     return this.projectsServices.createOne({
