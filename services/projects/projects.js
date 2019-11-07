@@ -1,6 +1,7 @@
 const MongoLib = require("../../lib/mongodb");
 const ClientsServices = require("../clients/clients");
 const ProviderServices = require("../providers/providers");
+// const debug = require("debug")("app:services:projects");
 class Projects {
   constructor() {
     this.mongodb = new MongoLib("projects");
@@ -15,21 +16,22 @@ class Projects {
       //convert the object into an array with just the values
       const clientsIds = clients.map(({clientId}) => clientId);
       const providerIds = providers.map(({providerId}) => providerId);
-      try {
-        const clientsInProject = await clientServices.getMany(
-          clientsIds
-        );
-        const providersInProject = await providerServices.getMany(
-          providerIds
-        );
-        return {
-          ...project,
-          clients: clientsInProject,
-          providers: providersInProject
-        };
-      } catch (error) {
-        return {...project, clients: [], providers: []};
-      }
+
+      const clientsInProject = await clientServices.getMany(
+        clientsIds
+      );
+      const providersInProject = await providerServices.getMany(
+        providerIds
+      );
+      return {
+        ...project,
+        clients: clientsInProject || [],
+        providers: providersInProject || []
+      };
+      // } catch (error) {
+      //   debug(error);
+      //   return {...project, clients: [], providers: []};
+      // }
     });
   }
   getOneWithCustumQuery(query) {

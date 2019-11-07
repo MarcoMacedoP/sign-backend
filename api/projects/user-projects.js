@@ -14,7 +14,7 @@ router.get("/user/", async (req, res, next) => {
   const userProjectsServices = new UserProjectsServices(userId);
 
   try {
-    const projects = await userProjectsServices.getAll(userId);
+    const projects = await userProjectsServices.getAll();
     sendGoodResponse({
       response: res,
       message: "get all user projects!",
@@ -33,8 +33,7 @@ router.get("/user/:projectId", async (req, res, next) => {
 
   try {
     const projects = await userProjectsServices.getOneWithFullInfo(
-      projectId,
-      userId
+      projectId
     );
     sendGoodResponse({
       response: res,
@@ -54,10 +53,7 @@ router.post(
     const userId = getUserIDFromAccessToken(req);
     const userProjectsServices = new UserProjectsServices(userId);
     try {
-      const project = await userProjectsServices.createOne(
-        userId,
-        req.body
-      );
+      const project = await userProjectsServices.createOne(req.body);
       sendGoodResponse({
         response: res,
         message: "created a project!",
@@ -80,7 +76,6 @@ router.put(
     try {
       const updatedProject = await userProjectsServices.updateOne(
         projectId,
-        userId,
         req.body
       );
       sendGoodResponse({
@@ -100,7 +95,7 @@ router.delete("/user/:projectId", async (req, res, next) => {
   const userProjectsServices = new UserProjectsServices(userId);
   const {projectId} = req.params;
   try {
-    await userProjectsServices.removeOne(projectId, userId);
+    await userProjectsServices.removeOne(projectId);
     sendGoodResponse({
       response: res,
       message: "removed a project!",

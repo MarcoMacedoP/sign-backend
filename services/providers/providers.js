@@ -20,11 +20,15 @@ class ProvidersServices {
         )
       );
   }
-  getMany(providerIds) {
-    const whereCondition = `WHERE provider_id ${this.mariadb.createMultipleCondition(
-      providerIds
-    )}`;
-    return this.mariadb.read(this.table, whereCondition);
+  getMany(providerIds = []) {
+    try {
+      const whereCondition = `WHERE provider_id ${this.mariadb.createMultipleCondition(
+        providerIds
+      )}`;
+      return this.mariadb.read(this.table, whereCondition);
+    } catch (error) {
+      return [];
+    }
   }
   getOne(providerId) {
     const query = `WHERE provider_id = ${providerId}`; // WHERE query;

@@ -2,6 +2,7 @@ const ProjectServices = require("./projects");
 const ClientsServices = require("../clients/clients");
 const Boom = require("@hapi/boom");
 const validate = require("../../utils/validations");
+const {ObjectId} = require("mongodb");
 // const debug = require("debug")("app:services:clients-projects");
 class ClientsProjects {
   constructor(projectId) {
@@ -37,7 +38,9 @@ class ClientsProjects {
       .catch(error => {
         if (validate.errorIs404(error)) {
           return this.projects
-            .getOneById(this.projectId)
+            .getProjectWithFullInfo({
+              _id: new ObjectId(this.projectId)
+            })
             .then(({clients = []}) =>
               this.projects.updateOneById(this.projectId, {
                 clients: [{clientId}, ...clients]
@@ -53,7 +56,7 @@ class ClientsProjects {
   removeClient(clientId) {
     return this.projects
       .getOneById(this.projectId)
-      .then(({clients}) => {
+      .then(({clients = []}) => {
         const filteredClients = clients.filter(
           client => client.clientId !== clientId
         );
@@ -65,7 +68,7 @@ class ClientsProjects {
   findClientInProject(clientId) {
     return this.projects
       .getOneById(this.projectId)
-      .then(({clients}) => {
+      .then(({clients = []}) => {
         const [findedClientById] = clients.filter(
           client => client.clientId === clientId
         );
