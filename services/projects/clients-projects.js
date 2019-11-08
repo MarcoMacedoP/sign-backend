@@ -38,9 +38,7 @@ class ClientsProjects {
       .catch(error => {
         if (validate.errorIs404(error)) {
           return this.projects
-            .getProjectWithFullInfo({
-              _id: new ObjectId(this.projectId)
-            })
+            .getOneById(this.projectId)
             .then(({clients = []}) =>
               this.projects.updateOneById(this.projectId, {
                 clients: [{clientId}, ...clients]

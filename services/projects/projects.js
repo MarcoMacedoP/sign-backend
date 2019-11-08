@@ -1,7 +1,8 @@
 const MongoLib = require("../../lib/mongodb");
+const {ObjectId} = require("mongodb");
 const ClientsServices = require("../clients/clients");
 const ProviderServices = require("../providers/providers");
-// const debug = require("debug")("app:services:projects");
+const debug = require("debug")("app:services:projects");
 class Projects {
   constructor() {
     this.mongodb = new MongoLib("projects");
@@ -10,6 +11,7 @@ class Projects {
   getProjectWithFullInfo(query = {}) {
     return this.getOneWithCustumQuery(query).then(async project => {
       const {clients = [], providers = []} = project;
+      debug(clients, providers);
       //instance all services
       const clientServices = new ClientsServices();
       const providerServices = new ProviderServices();
@@ -50,7 +52,11 @@ class Projects {
     return this.mongodb.updateOne(filter, newData);
   }
   updateOneById(projectId, newData) {
-    return this.mongodb.updateOneById(projectId, newData);
+    return this.mongodb
+      .updateOneById(projectId, newData)
+      .then(() =>
+        this.getProjectWithFullInfo({_id: new ObjectId(projectId)})
+      );
   }
   removeOne(filter = {}) {
     return this.mongodb.removeOne(filter);
