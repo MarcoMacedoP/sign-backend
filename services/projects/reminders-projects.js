@@ -1,11 +1,11 @@
-const TeamsServices = require("../teams/teams");
+const ReminderServices = require("../reminders/reminders");
 const MongoLib = require("../../lib/mongodb");
 
-function getProjectTeams(teamsIds = []) {
-  const teamsServices = new TeamsServices();
-  return teamsServices.getMany(teamsIds);
+function getProjectReminders(teamsIds = []) {
+  const remindersServices = new ReminderServices();
+  return remindersServices.getMany(teamsIds);
 }
-function addTeamToProject(teamId, projectId) {
+function addReminderToProject(teamId, projectId) {
   const projectsCollection = new MongoLib("projects");
   return projectsCollection.updateOneById(
     projectId,
@@ -15,7 +15,7 @@ function addTeamToProject(teamId, projectId) {
     "$addToSet"
   );
 }
-function removeTeamInProject(teamId, projectId) {
+function removeReminderInProject(teamId, projectId) {
   const projectsCollection = new MongoLib("projects");
   return projectsCollection.updateOneById(
     projectId,
@@ -27,7 +27,7 @@ function removeTeamInProject(teamId, projectId) {
 }
 
 module.exports = {
-  getProjectTeams,
-  addTeamToProject,
-  removeTeamInProject
+  getProjectReminders,
+  addReminderToProject,
+  removeReminderInProject
 };
