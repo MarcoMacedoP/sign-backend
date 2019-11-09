@@ -38,7 +38,7 @@ function clientErrorHandler(err, req, res, next) {
   }
 }
 
-function errorHandler(err, req, res, next) {
+function errorHandler(err, req, res) {
   const {
     output: {statusCode, payload}
   } = err;
