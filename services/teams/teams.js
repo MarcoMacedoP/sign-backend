@@ -1,5 +1,6 @@
 const MongoLib = require("../../lib/mongodb");
-
+const {ObjectId} = require("mongodb");
+const debug = require("debug")("app:services:teams");
 class Teams {
   constructor() {
     this.mongodb = new MongoLib("teams");
@@ -37,6 +38,13 @@ class Teams {
   }
   updateOne(teamId, data) {
     return this.mongodb.updateOneById(teamId, data);
+  }
+  getMany(arrayOfIds = []) {
+    const arrayOfIdsInObjectId = arrayOfIds.map(
+      id => new ObjectId(id)
+    );
+    debug(arrayOfIdsInObjectId);
+    return this.mongodb.readAll({_id: {$in: arrayOfIdsInObjectId}});
   }
 }
 module.exports = Teams;
