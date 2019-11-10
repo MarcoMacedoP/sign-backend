@@ -13,8 +13,8 @@ const removeOne = filter => reminders().removeOne(filter);
 const find = filter => reminders().readAll(filter);
 
 const findInArray = arrayOfReminders =>
-  reminders().readAll({
-    $in: [arrayOfReminders.map(id => new ObjectId(id))]
+  find({
+    _id: {$in: arrayOfReminders.map(id => new ObjectId(id))}
   });
 
 module.exports = {

@@ -3,8 +3,9 @@ const {ObjectId} = require("mongodb");
 const ClientsServices = require("../clients/clients");
 const ProviderServices = require("../providers/providers");
 const {getProjectTeams} = require("./teams-projects");
+const {getProjectReminders} = require("./reminders-projects");
 const debug = require("debug")("app:services:projects");
-const Boom = require("@hapi/boom");
+
 class Projects {
   constructor() {
     this.mongodb = new MongoLib("projects");
@@ -16,8 +17,13 @@ class Projects {
         if (!project) {
           return [];
         }
-        const {clients = [], providers = [], teams = []} = project;
-        debug(clients, providers, teams);
+        const {
+          clients = [],
+          providers = [],
+          teams = [],
+          reminders = []
+        } = project;
+        debug(clients, providers, teams, reminders);
         //instance all services
         const clientServices = new ClientsServices();
         const providerServices = new ProviderServices();
@@ -27,7 +33,9 @@ class Projects {
           ({providerId}) => providerId
         );
         const teamsIds = teams.map(({teamId}) => teamId);
-        debug(teamsIds);
+        const remindersIds = reminders.map(
+          ({reminderId}) => reminderId
+        );
         const clientsInProject = await clientServices.getMany(
           clientsIds
         );
@@ -35,12 +43,15 @@ class Projects {
           providerIds
         );
         const teamsInProject = await getProjectTeams(teamsIds);
-        debug(teamsInProject);
+        const remindersInProject = await getProjectReminders(
+          remindersIds
+        );
         return {
           ...project,
           clients: clientsInProject || [],
           providers: providersInProject || [],
-          teams: teamsInProject || []
+          teams: teamsInProject || [],
+          reminders: remindersInProject || []
         };
       }
     );

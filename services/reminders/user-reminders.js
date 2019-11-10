@@ -1,6 +1,5 @@
 const reminderServices = require("./index");
 const {ObjectId} = require("mongodb");
-const debug = require("debug")("app:services:user-reminders");
 //utils
 const makeUserFilter = (userId, remidnerId) => ({
   userId: userId.toString(),

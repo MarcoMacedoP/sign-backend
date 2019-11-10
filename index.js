@@ -26,6 +26,8 @@ const activitiesProjectsApiRoute = require("./api/projects/activities-projects")
 const clientsProjectsApiRoute = require("./api/projects/clients-projects");
 const providersProjectsApiRoute = require("./api/projects/providers-projects");
 const teamsProjectsApiRoute = require("./api/projects/teams-projects");
+const remindersProjectsApiRoute = require("./api/projects/reminders-projects");
+
 const userNotificationsRoute = require("./api/notifications/user-notifications");
 //---------------------------------------------
 
@@ -128,6 +130,11 @@ app.use(
   passport.authenticate("jwt", {session: false}),
   teamsProjectsApiRoute
 );
+app.use(
+  "/api/projects/reminders",
+  passport.authenticate("jwt", {session: false}),
+  remindersProjectsApiRoute
+);
 //Notifications routes
 app.use(
   "/api/notifications/user",
@@ -138,14 +145,14 @@ app.use(
 const {
   logErrors,
   wrapErrors,
-  clientErrorHandler,
+  clientErrors,
   errorHandler
 } = require("./utils/middlewares/errorHandlers");
 
 //Middlewares
 app.use(logErrors);
 app.use(wrapErrors);
-app.use(clientErrorHandler);
+app.use(clientErrors);
 app.use(errorHandler);
 
 //Views
