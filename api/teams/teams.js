@@ -3,37 +3,13 @@ const router = require("./teams-user");
 const debug = require("debug")("app:teams:api");
 //services
 const TeamsServices = require("../../services/teams/teams");
-//validate
-const validate = require("../../utils/middlewares/validationHandler");
-const {createTeamSchema} = require("../../utils/schemas/teams");
+
 //middlewares
 const fileUpload = require("../../utils/middlewares/fileUpload");
 //utils
 const {sendGoodResponse} = require("../../utils/responses");
-const {getUserIDFromAccessToken} = require("../../utils/extractJwt");
 const config = require("../../config/");
-router.post(
-  "/",
-  validate(createTeamSchema),
-  async (request, response, next) => {
-    const userId = getUserIDFromAccessToken(request);
-    const teamsServices = new TeamsServices();
-    try {
-      const teams = await teamsServices.createOne({
-        ...request.body,
-        userId
-      });
-      sendGoodResponse({
-        response,
-        message: "create a team",
-        statusCode: 200,
-        data: teams
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+
 router.patch(
   "/photo/:teamId",
   fileUpload.single("picture"),
