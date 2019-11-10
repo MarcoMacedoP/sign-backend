@@ -30,6 +30,22 @@ router.get("/user/", async (req, res, next) => {
     next(error);
   }
 });
+
+router.post("/user/", async (req, res, next) => {
+  const teamsUserServices = new TeamsUserServices();
+  const userId = getUserIDFromAccessToken(req);
+  try {
+    const team = await teamsUserServices.insertOne(userId, req.body);
+    sendGoodResponse({
+      response: res,
+      message: "created team",
+      statusCode: 200,
+      data: team
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 /**
  * Get one team that a user haves
  */
