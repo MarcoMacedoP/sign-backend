@@ -1,35 +1,70 @@
 const MongoLib = require("../../lib/mongodb");
 const {ObjectId} = require("mongodb");
+const TeamsUsersServices = require("./teams-users");
+const debug = require("debug")("app:services:teams");
 
-function Teams() {
-  this.memberRoles = {
-    admin: "admin",
-    member: "member",
-    founder: "founder"
-  };
+class Teams {
+  constructor() {
+    this.collection = () => new MongoLib("teams");
+    this.membersCollection = () => new TeamsUsersServices();
+  }
+
+  async createOne({teamData, founderId}) {
+    const team = await this.collection().createOne(teamData);
+    const members = await this.membersCollection().addUserToTeamAsFounder({
+      teamId: team._id,
+      userId: founderId
+    });
+
+    return {
+      ...team,
+      members: [members]
+    };
+  }
+
+  removeById({teamId}) {
+    return this.collection()
+      .removeOneById(teamId)
+      .then(({deletedCount}) => ({deletedCount, teamId}));
+  }
+
+  updateOne(teamId, data, extraFilter = {}) {
+    debug(teamId);
+    const filter = {_id: new ObjectId(teamId), ...extraFilter};
+    debug(filter);
+    return this.collection().updateOne(filter, data);
+  }
+  getMany(arrayOfIds = []) {
+    return this.collection().readAll({
+      _id: {$in: arrayOfIds.map(id => new ObjectId(id))}
+    });
+  }
+  getOne(filter) {
+    debug(filter);
+    return this.collection()
+      .readOne(filter)
+      .then(async team => {
+        debug(team);
+        if (!team) {
+          return null;
+        }
+        const membersInTeam = await this.membersCollection().getAllUsersInTeam({
+          teamId: team._id
+        });
+        debug(membersInTeam);
+        return {
+          ...team,
+          members: membersInTeam
+        };
+      });
+  }
+  getOneById(teamId, extraFilter = {}) {
+    const filter = {
+      _id: new ObjectId(teamId),
+      ...extraFilter
+    };
+    return this.getOne(filter);
+  }
 }
-Teams.prototype._collection = function() {
-  return new MongoLib("teams");
-};
-Teams.prototype.createOne = function(teamData) {
-  return this._collection().createOne(teamData);
-};
-Teams.prototype.updateOne = function(teamId, data, extraFilter = {}) {
-  return this._collection().updateOne(
-    {_id: new ObjectId(teamId), ...extraFilter},
-    data
-  );
-};
-Teams.prototype.getMany = function(arrayOfIds = []) {
-  return this._collection().readAll({
-    _id: {$in: arrayOfIds.map(id => new ObjectId(id))}
-  });
-};
-Teams.prototype.getOneById = function(teamId, extraFilter = {}) {
-  return this._collection().readOne({
-    _id: new ObjectId(teamId),
-    ...extraFilter
-  });
-};
 
 module.exports = Teams;

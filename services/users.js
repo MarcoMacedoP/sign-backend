@@ -87,6 +87,18 @@ class UsersServices {
         job: users[0].job_title
       }));
   }
+  getFullNameAndProfilePicture({userId}) {
+    return this.mariadb
+      .read(
+        this.table,
+        `WHERE user_id = ${userId}`,
+        "name, lastname, profile_pic_url"
+      )
+      .then(([user]) => ({
+        profilePic: user.profile_pic_url,
+        name: `${user.name} ${user.lastname}`
+      }));
+  }
   /**Gets a user by his email.
    * Return the first user finded with the provided email,
    * anyway it should only be one user with the email

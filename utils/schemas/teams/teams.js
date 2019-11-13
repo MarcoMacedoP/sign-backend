@@ -1,5 +1,6 @@
 const Joi = require("@hapi/joi");
 const {mongoIdSchema} = require("../global");
+
 const usersRoles = {
   admin: "admin",
   member: "member",
@@ -9,20 +10,23 @@ const teamsSchema = {
   name: Joi.string().required(),
   description: Joi.string(),
   picture: Joi.string(),
-  members: Joi.array(),
   projects: Joi.array(),
   providers: Joi.array(),
   clients: Joi.array(),
   reminders: Joi.array()
 };
-const memberSchema = {
-  role: Joi.string()
-    .valid([usersRoles.admin, usersRoles.member, usersRoles.founder])
-    .required(),
-  userId: mongoIdSchema.required()
-};
 
-module.exports = {
-  teamsSchema,
-  memberSchema
+const teamId = mongoIdSchema.required();
+const membersTeamsSchema = {
+  userId: mongoIdSchema.required(),
+  role: Joi.valid([
+    usersRoles.admin,
+    usersRoles.founder,
+    usersRoles.member
+  ]).required(),
+  teamId
 };
+const getTeamShema = {
+  teamId
+};
+module.exports = {getTeamShema, membersTeamsSchema, teamsSchema};

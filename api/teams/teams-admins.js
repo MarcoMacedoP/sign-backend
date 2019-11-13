@@ -2,17 +2,19 @@ const router = require("express").Router();
 const TeamsAdminsServices = require("../../services/teams/teams-admins");
 const {getUserIDFromAccessToken} = require("../../utils/extractJwt");
 const {sendGoodResponse} = require("../../utils/responses");
+const debug = require("debug")("app:api:teams-admins");
 
 router.put("/:teamId", async (req, res, next) => {
-  const userId = getUserIDFromAccessToken(req);
   const {teamId} = req.params;
+  debug(req.body);
   const teamsAdminsServices = new TeamsAdminsServices();
   try {
-    const updatedTeam = await teamsAdminsServices.updateOne(
-      userId,
+    const updatedTeam = await teamsAdminsServices.updateTeam({
+      adminId: getUserIDFromAccessToken(req),
       teamId,
-      req.body
-    );
+      data: req.body
+    });
+
     sendGoodResponse({
       response: res,
       message: "update team",
@@ -30,14 +32,14 @@ router.patch("/add_member/:teamId", async (req, res, next) => {
   const {teamId} = req.params;
   const teamsAdminsServices = new TeamsAdminsServices();
   try {
-    const updatedTeam = await teamsAdminsServices.addUserToTeam(
+    const updatedTeam = await teamsAdminsServices.addUserToTeam({
       adminId,
       teamId,
       userId
-    );
+    });
     sendGoodResponse({
       response: res,
-      message: "updates team",
+      message: "added member to team!",
       statusCode: 201,
       data: updatedTeam
     });
@@ -51,14 +53,14 @@ router.patch("/remove_member/:teamId", async (req, res, next) => {
   const {teamId} = req.params;
   const teamsAdminsServices = new TeamsAdminsServices();
   try {
-    const updatedTeam = await teamsAdminsServices.removeUserOfMembers(
+    const updatedTeam = await teamsAdminsServices.removeMemberOfATeam({
       adminId,
       teamId,
       userId
-    );
+    });
     sendGoodResponse({
       response: res,
-      message: "updated team",
+      message: "removed member of team",
       statusCode: 201,
       data: updatedTeam
     });
