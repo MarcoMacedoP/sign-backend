@@ -10,7 +10,7 @@ class TeamsRemindersServices {
         reminderId
       }
     };
-    return this.collection().updateOne(teamId, addToSet, "$addToSet");
+    return this.collection().updateOne(teamId, addToSet, null, "$addToSet");
   }
   removeReminderOfTeam({ reminderId, teamId }) {
     const pull = {
@@ -18,7 +18,7 @@ class TeamsRemindersServices {
         reminderId
       }
     };
-    return this.collection().updateOne(teamId, pull, "$pull");
+    return this.collection().updateOne(teamId, pull, null, "$pull");
   }
   async getRemindersOfATeam({ teamId }) {
     const remindersServices = new ReminderServices();

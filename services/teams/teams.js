@@ -31,7 +31,7 @@ class Teams {
   updateOne(teamId, data, extraFilter = {}, operator = "") {
     debug(teamId);
     const filter = { _id: new ObjectId(teamId), ...extraFilter };
-    debug(filter);
+    debug("updateOne() filter:", filter);
     return this.collection().updateOne(filter, data, operator);
   }
   getMany(arrayOfIds = []) {
