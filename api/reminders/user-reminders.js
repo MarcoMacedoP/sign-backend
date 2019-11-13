@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const userReminders = require("../../services/reminders/user-reminders");
+const UserRemindersServices = require("../../services/reminders/user-reminders");
 //utils
-const {sendGoodResponse} = require("../../utils/responses");
-const {getUserIDFromAccessToken} = require("../../utils/extractJwt");
+const { sendGoodResponse } = require("../../utils/responses");
+const { getUserIDFromAccessToken } = require("../../utils/extractJwt");
 //validate
 const {
   createReminderSchema,
@@ -13,6 +13,7 @@ const validate = require("../../utils/middlewares/validationHandler");
 
 router.get("/", async function(req, res, next) {
   const userID = getUserIDFromAccessToken(req);
+  const userReminders = new UserRemindersServices();
   try {
     const reminders = await userReminders.findAll(userID);
     sendGoodResponse({
@@ -26,38 +27,30 @@ router.get("/", async function(req, res, next) {
   }
 });
 
-router.post(
-  "/",
-  validate(createReminderSchema),
-  async (req, res, next) => {
-    const userID = getUserIDFromAccessToken(req);
-    try {
-      const reminder = await userReminders.insertOne(
-        userID,
-        req.body
-      );
-      sendGoodResponse({
-        response: res,
-        message: "get reminders :)",
-        statusCode: 200,
-        data: reminder
-      });
-    } catch (error) {
-      next(error);
-    }
+router.post("/", validate(createReminderSchema), async (req, res, next) => {
+  const userID = getUserIDFromAccessToken(req);
+  const userReminders = new UserRemindersServices();
+  try {
+    const reminder = await userReminders.insertOne(userID, req.body);
+    sendGoodResponse({
+      response: res,
+      message: "get reminders :)",
+      statusCode: 200,
+      data: reminder
+    });
+  } catch (error) {
+    next(error);
   }
-);
+});
 router.get(
   "/:reminderId",
   validate(reminderIdSchema, "params"),
   async (req, res, next) => {
     const userID = getUserIDFromAccessToken(req);
-    const {reminderId} = req.params;
+    const { reminderId } = req.params;
     try {
-      const reminder = await userReminders.findOne(
-        userID,
-        reminderId
-      );
+      const userReminders = new UserRemindersServices();
+      const reminder = await userReminders.findOne(userID, reminderId);
       sendGoodResponse({
         response: res,
         message: "get reminders :)",
@@ -75,7 +68,9 @@ router.put(
   validate(reminderSchema),
   async function(req, res, next) {
     const userID = getUserIDFromAccessToken(req);
-    const {reminderId} = req.params;
+    const { reminderId } = req.params;
+    const userReminders = new UserRemindersServices();
+
     try {
       const reminder = await userReminders.updateOne(
         userID,
@@ -98,12 +93,11 @@ router.delete(
   validate(reminderIdSchema, "params"),
   async function(req, res, next) {
     const userID = getUserIDFromAccessToken(req);
-    const {reminderId} = req.params;
+    const { reminderId } = req.params;
+    const userReminders = new UserRemindersServices();
+
     try {
-      const reminder = await userReminders.removeOne(
-        userID,
-        reminderId
-      );
+      const reminder = await userReminders.removeOne(userID, reminderId);
       sendGoodResponse({
         response: res,
         message: "get reminders :)",
