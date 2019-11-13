@@ -2,7 +2,7 @@ const MongoLib = require("../../lib/mongodb");
 const { ObjectId } = require("mongodb");
 const ClientsServices = require("../clients/clients");
 const ProviderServices = require("../providers/providers");
-const ProjectServices = require("./teams-projects");
+const ProjectServices = require("./projects-teams");
 const RemindersProjectsServices = require("./reminders-projects");
 const debug = require("debug")("app:services:projects");
 

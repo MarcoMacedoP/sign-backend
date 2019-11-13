@@ -1,6 +1,6 @@
 const router = require("express").Router();
 //services
-const TeamsProjectsServices = require("../../services/projects/teams-projects");
+const TeamsProjectsServices = require("../../services/projects/projects-teams");
 //validation
 const validate = require("../../utils/middlewares/validationHandler");
 const {

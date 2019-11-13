@@ -25,7 +25,7 @@ const userProjectsApiRoute = require("./api/projects/user-projects");
 const activitiesProjectsApiRoute = require("./api/projects/activities-projects");
 const clientsProjectsApiRoute = require("./api/projects/clients-projects");
 const providersProjectsApiRoute = require("./api/projects/providers-projects");
-const teamsProjectsApiRoute = require("./api/projects/teams-projects");
+const teamsProjectsApiRoute = require("./api/projects/projects-teams");
 const remindersProjectsApiRoute = require("./api/projects/reminders-projects");
 
 const userNotificationsRoute = require("./api/notifications/user-notifications");
