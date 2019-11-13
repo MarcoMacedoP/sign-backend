@@ -1,4 +1,4 @@
-const {ObjectId} = require("mongodb");
+const { ObjectId } = require("mongodb");
 const MongoLib = require("../../lib/mongodb");
 //services
 const Projects = require("./projects");
@@ -18,14 +18,7 @@ class UserProjects {
     });
   }
   getAll() {
-    return this.projectsServices
-      .getAll({userId: this.userId})
-      .then((projects = []) => {
-        const projectsPromises = projects.map(project =>
-          this.getOneWithFullInfo(project._id)
-        );
-        return Promise.all(projectsPromises);
-      });
+    return this.projectsServices.getAll({ userId: this.userId });
   }
   createOne(projectData = {}) {
     return this.projectsServices.createOne({
@@ -35,7 +28,7 @@ class UserProjects {
   }
   updateOne(projectId, newProjectData = {}) {
     return this.projectsServices.updateOne(
-      {userId: this.userId, _id: new ObjectId(projectId)},
+      { userId: this.userId, _id: new ObjectId(projectId) },
       newProjectData
     );
   }

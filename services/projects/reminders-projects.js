@@ -1,32 +1,31 @@
-const remindersServices = require("../reminders/index");
+const ReminderServices = require("../reminders/reminders");
 const MongoLib = require("../../lib/mongodb");
-
-function getProjectReminders(remindersIds = []) {
-  return remindersServices.findInArray(remindersIds);
+class RemindersProjects {
+  projectsCollection() {
+    return new MongoLib("projects");
+  }
+  getProjectReminders(remindersIds = []) {
+    return new ReminderServices().findInArray(remindersIds);
+  }
+  addReminderToProject(reminderId, projectId) {
+    return this.projectsCollection().updateOneById(
+      projectId,
+      {
+        reminders: { reminderId }
+      },
+      "$addToSet"
+    );
+  }
+  removeReminderInProject(reminderId, projectId) {
+    return this.projectsCollection()
+      .updateOneById(
+        projectId,
+        {
+          reminders: { reminderId }
+        },
+        "$pull"
+      )
+      .then(() => ({ removedReminder: reminderId, projectId }));
+  }
 }
-function addReminderToProject(reminderId, projectId) {
-  const projectsCollection = new MongoLib("projects");
-  return projectsCollection.updateOneById(
-    projectId,
-    {
-      reminders: {reminderId}
-    },
-    "$addToSet"
-  );
-}
-function removeReminderInProject(reminderId, projectId) {
-  const projectsCollection = new MongoLib("projects");
-  return projectsCollection.updateOneById(
-    projectId,
-    {
-      remidners: {reminderId}
-    },
-    "$pull"
-  );
-}
-
-module.exports = {
-  getProjectReminders,
-  addReminderToProject,
-  removeReminderInProject
-};
+module.exports = RemindersProjects;

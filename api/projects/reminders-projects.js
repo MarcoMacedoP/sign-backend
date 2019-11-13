@@ -1,9 +1,6 @@
 const router = require("express").Router();
 //services
-const {
-  addReminderToProject,
-  removeReminderInProject
-} = require("../../services/projects/reminders-projects");
+const ReminderServices = require("../../services/projects/reminders-projects");
 //validation
 const validate = require("../../utils/middlewares/validationHandler");
 const {
@@ -11,16 +8,17 @@ const {
   removeReminderInProjectSchema
 } = require("../../utils/schemas/projects/reminders-projects");
 //utils
-const {sendGoodResponse} = require("../../utils/responses");
+const { sendGoodResponse } = require("../../utils/responses");
 //*********************endpoints**************************/
 //add reminder to project
 router.post(
   "/",
   validate(addReminderToProjectSchema),
   async (req, res, next) => {
-    const {projectId, reminderId} = req.body;
+    const { projectId, reminderId } = req.body;
+    const reminderServices = new ReminderServices();
     try {
-      const project = await addReminderToProject(
+      const project = await reminderServices.addReminderToProject(
         reminderId,
         projectId
       );
@@ -41,9 +39,10 @@ router.delete(
   "/",
   validate(removeReminderInProjectSchema),
   async (req, res, next) => {
-    const {projectId, reminderId} = req.body;
+    const { projectId, reminderId } = req.body;
+    const reminderServices = new ReminderServices();
     try {
-      const project = await removeReminderInProject(
+      const project = await reminderServices.removeReminderInProject(
         reminderId,
         projectId
       );

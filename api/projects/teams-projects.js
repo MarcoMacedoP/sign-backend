@@ -1,9 +1,6 @@
 const router = require("express").Router();
 //services
-const {
-  addTeamToProject,
-  removeTeamInProject
-} = require("../../services/projects/teams-projects");
+const TeamsProjectsServices = require("../../services/projects/teams-projects");
 //validation
 const validate = require("../../utils/middlewares/validationHandler");
 const {
@@ -11,35 +8,39 @@ const {
   removeTeamInProjectSchema
 } = require("../../utils/schemas/projects/teams-projects");
 //utils
-const {sendGoodResponse} = require("../../utils/responses");
+const { sendGoodResponse } = require("../../utils/responses");
 //*********************endpoints**************************/
 //add team to project
-router.post(
-  "/",
-  validate(addTeamToProjectSchema),
-  async (req, res, next) => {
-    const {projectId, teamId} = req.body;
-    try {
-      const project = await addTeamToProject(teamId, projectId);
-      sendGoodResponse({
-        response: res,
-        data: project,
-        statusCode: 201,
-        message: "added team to project"
-      });
-    } catch (error) {
-      next(error);
-    }
+router.post("/", validate(addTeamToProjectSchema), async (req, res, next) => {
+  const { projectId, teamId } = req.body;
+  const teamsProjectsServices = new TeamsProjectsServices();
+  try {
+    const project = await teamsProjectsServices.addTeamToProject(
+      teamId,
+      projectId
+    );
+    sendGoodResponse({
+      response: res,
+      data: project,
+      statusCode: 201,
+      message: "added team to project"
+    });
+  } catch (error) {
+    next(error);
   }
-);
+});
 //remove team to project
 router.delete(
   "/",
   validate(removeTeamInProjectSchema),
   async (req, res, next) => {
-    const {projectId, teamId} = req.body;
+    const { projectId, teamId } = req.body;
+    const teamsProjectsServices = new TeamsProjectsServices();
     try {
-      const project = await removeTeamInProject(teamId, projectId);
+      const project = await teamsProjectsServices.removeTeamInProject(
+        teamId,
+        projectId
+      );
       sendGoodResponse({
         response: res,
         data: project,
