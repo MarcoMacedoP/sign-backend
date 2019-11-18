@@ -1,7 +1,7 @@
 const passport = require("passport");
 const signToken = require("./signToken");
 const RefreshToken = require("../../services/refreshToken");
-const {sendGoodResponse} = require("../responses");
+const { sendGoodResponse } = require("../responses");
 const Boom = require("@hapi/boom");
 //in case of well auth user also return the notifications that the user haves.
 const UserNotificationsServices = require("../../services/notifications/user-notifications");
@@ -17,7 +17,7 @@ function authenticateUser(req, res, next) {
       if (!user) {
         next(Boom.unauthorized());
       } else {
-        req.logIn(user, {session: false}, async error => {
+        req.logIn(user, { session: false }, async error => {
           if (error) {
             next(Boom.unauthorized());
           } else if (user) {
@@ -30,6 +30,7 @@ function authenticateUser(req, res, next) {
               user.user_id,
               user.email
             );
+            //
             const userNotificationsServices = new UserNotificationsServices(
               user.user_id
             );

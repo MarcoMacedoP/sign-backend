@@ -10,8 +10,10 @@ const signToken = require("../utils/auth/signToken");
 
 class RefreshToken {
   constructor() {
-    const collection = "tokens";
-    this.mongodb = new MongoLib(collection);
+    debug("nueva instancia de refresh token!");
+  }
+  collection() {
+    return new MongoLib("tokens");
   }
   create(userId, email) {
     const refreshToken = {
@@ -20,15 +22,20 @@ class RefreshToken {
       userId,
       email
     };
-    return this.checkIfUserHasToken(userId).then(userHasToken =>
-      userHasToken
-        ? this.mongodb
-            .updateOne({userId}, refreshToken)
-            .then(({token}) => token)
-        : this.mongodb
-            .createOne(refreshToken)
-            .then(({token}) => token)
-    );
+    return this.checkIfUserHasToken(userId).then(userHasToken => {
+      debug(userHasToken);
+      if (userHasToken) {
+        debug("updateOne");
+        return this.collection()
+          .updateOne({ userId }, refreshToken)
+          .then(({ token }) => token);
+      } else {
+        debug("createOne");
+        return this.collection()
+          .createOne(refreshToken)
+          .then(({ token }) => token);
+      }
+    });
   }
 
   /** gets a refresh token and returns a new access token
@@ -37,8 +44,8 @@ class RefreshToken {
    * @param {*} token the old refresh token
    */
   getAccessTokenFromRefreshToken(token) {
-    return this.mongodb
-      .readOne({token}) // prettier-ignore
+    return this.collection()
+      .readOne({ token }) // prettier-ignore
       .then(refreshToken => {
         debug(token);
         if (!refreshToken) {
@@ -60,9 +67,9 @@ class RefreshToken {
    *         ocurred while deleting refreshToken
    */
   removeRefreshToken(refreshToken) {
-    return this.mongodb
-      .removeOne({token: refreshToken})
-      .then(({deletedCount}) => {
+    return this.collection()
+      .removeOne({ token: refreshToken })
+      .then(({ deletedCount }) => {
         if (deletedCount === 0) {
           throw Boom.notFound();
         }
@@ -73,17 +80,20 @@ class RefreshToken {
    *
    */
   checkIfUserHasToken(userId) {
-    return this.mongodb.readOne({userId}).then(refreshToken => {
-      debug(refreshToken);
-      return refreshToken ? true : false;
-    });
+    debug("checkIfUserHasToken()");
+    return this.collection()
+      .readOne({ userId })
+      .then(refreshToken => {
+        debug(refreshToken);
+        return refreshToken ? true : false;
+      });
   }
   //gets a user from a refresh token if user exist
   getUserFromRefreshToken(refreshToken) {
     const userServices = new UserServices();
-    return this.mongodb
-      .readOne({token: refreshToken})
-      .then(({userId}) => userId && userServices.getByID({userId}));
+    return this.collection()
+      .readOne({ token: refreshToken })
+      .then(({ userId }) => userId && userServices.getByID({ userId }));
   }
 }
 module.exports = RefreshToken;
